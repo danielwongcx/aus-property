@@ -19,6 +19,10 @@ If Pages is ever turned off: **Settings → Pages → Deploy from a branch**, br
 
 - Thesis: do not clone PropertyME; trust is the buy; the wedge is VIC-first, small rolls, or one sharp workflow
 - Pain → function map
+- Three prioritized mini-SaaS bets, in the section **Three mini-SaaS bets** (`#saas-bets` on the page). Each bet records the pain, what PropertyME already does, the gap a small desk can still win, what we would ship, and an action plan with the same week ranges and Phase A / B / C infra bands. Interactive charts cover pain rank, the PropertyME / gap / wedge cut, the roadmap, and cost by bet.
+    1. **Trust-lite money ops.** Receipt, allocate, owner payout, and a statement, with an audit trail. Not “trust accounting” until a solicitor and an accountant review it.
+    2. **VIC notice and compliance calendar.** Templates and due dates, after solicitor review.
+    3. **Maintenance approval handoff.** Enforce the threshold, let the landlord decide on a phone, and send status back. The trades marketplace stays parked.
 - What the Hub demo actually contains, and the gaps
 - A compact Hub vs PropertyME comparison
 - Diagrams: nested wedge, build phases, monthly cost bands

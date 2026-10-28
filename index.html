@@ -7,9 +7,10 @@
   <meta name="theme-color" content="#1c1915">
   <meta name="format-detection" content="telephone=no">
   <title>AU residential PM mini-SaaS — first-cut study</title>
-  <meta name="description" content="First-cut study of a VIC-first residential property-management mini-SaaS: the VIC Property Hub browser demo read against PropertyME, plus USD list-price server costs. Researched 28 October 2026.">
+  <meta name="description" content="First-cut study of a VIC-first residential property-management mini-SaaS: the VIC Property Hub browser demo read against PropertyME, three prioritized mini-SaaS bets, and USD list-price server costs. Researched 28 October 2026.">
   <meta property="og:title" content="AU residential PM mini-SaaS — first-cut study">
-  <meta property="og:description" content="VIC Property Hub demo × PropertyME, with a 28 October 2026 infrastructure cost cut. A study, not a product.">
+  <meta property="og:description" content="VIC Property Hub demo × PropertyME, three mini-SaaS bets, and a 28 October 2026 infrastructure cost cut. A study, not a product.">
+  <script>document.documentElement.classList.add("js");</script>
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://danielwongcx.github.io/aus-property/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -63,9 +64,15 @@
 
     a:link, a:visited { color: var(--link); }
     a:hover { color: var(--rust-deep); }
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible {
       outline: 3px solid var(--rust);
       outline-offset: 3px;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
     }
 
     .skip {
@@ -483,13 +490,15 @@
       gap: 0.75rem;
       font-variant-numeric: tabular-nums;
     }
-    .chart-top { font-weight: 700; }
+    .chart-top { font-weight: 700; flex-wrap: wrap; }
     .scale {
       margin-top: 0.35rem;
       color: var(--muted);
       font-size: 0.875rem;
     }
     .track {
+      display: block;
+      width: 100%;
       position: relative;
       height: 0.85rem;
       margin-top: 0.35rem;
@@ -564,6 +573,219 @@
     /* Sources */
     .sources { padding-left: 1.25rem; }
     .sources li { margin: 0.7rem 0; padding-left: 0.25rem; }
+    /* Three mini-SaaS bets */
+    .subhead { margin-top: 1.75rem; scroll-margin-top: calc(var(--nav-h) + 0.5rem); }
+    .bet, .tl-panel { scroll-margin-top: calc(var(--nav-h) + 0.75rem); }
+    .js-only { display: none; }
+    .js .js-only { display: block; }
+    .js .matrix-controls.js-only,
+    .js .tl-controls.js-only { display: grid; }
+
+    .js .matrix-panels article { display: none; }
+    .js .matrix-panels article.is-on { display: block; }
+    .js .tl-panel { display: none; }
+    .js .tl-panel.is-on { display: block; }
+
+    .badge {
+      display: inline-block;
+      margin: 0 0 0.45rem;
+      padding: 0.15rem 0.65rem;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .bet-stack { display: grid; gap: 0.75rem; margin-top: 1rem; }
+    .bet[data-bet="1"] { box-shadow: inset 4px 0 0 var(--forest); }
+    .bet[data-bet="2"] { box-shadow: inset 4px 0 0 var(--clay); }
+    .bet[data-bet="3"] { box-shadow: inset 4px 0 0 var(--brown); }
+    .bet[data-match="yes"] { border-color: var(--ink); background: #fff; }
+    .bet[data-match="no"] { background: transparent; }
+    .match-note {
+      margin: 0 0 0.55rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .match-note[data-kind="yes"] { color: var(--forest); }
+    .match-note[data-kind="no"] { color: var(--rust-deep); }
+    .bet-dl { margin: 0.15rem 0 0; }
+    .bet-dl dt {
+      margin-top: 0.9rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--rust-deep);
+    }
+    .bet-dl dd { margin: 0.25rem 0 0; }
+    .bet-dl ol, .tl-panel ol { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+    .bet-dl li + li, .tl-panel li + li { margin-top: 0.35rem; }
+
+    .pain-list { display: grid; gap: 0.45rem; margin: 0.75rem 0 0; }
+    .tl-controls, .cost-plot {
+      display: grid;
+      gap: 0.35rem;
+      margin-top: 0.75rem;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+      padding: 0.75rem 0.75rem 0.85rem;
+    }
+    .pain-btn, .tl-btn, .cost-row {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+      padding: 0.65rem 0.75rem 0.75rem;
+      min-height: 44px;
+      cursor: pointer;
+    }
+    .pain-btn:hover, .tl-btn:hover, .cost-row:hover { background: #efe8dc; }
+    .pain-btn[aria-checked="true"],
+    .tl-btn[aria-selected="true"],
+    .cost-row[aria-checked="true"] {
+      border-color: var(--ink);
+      background: #fff;
+      box-shadow: inset 4px 0 0 var(--rust);
+    }
+    .pain-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.35rem 0.75rem;
+      font-weight: 700;
+    }
+    .pain-sub { display: block; margin-top: 0.2rem; color: var(--ink-soft); font-weight: 400; }
+    .sel-flag { display: none; font-weight: 700; }
+    [aria-checked="true"] .sel-flag,
+    [aria-selected="true"] .sel-flag { display: inline; }
+    .cost-plot [role="radiogroup"],
+    .tl-controls [role="tablist"] { display: grid; gap: 0.35rem; }
+    .segs {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.28rem;
+      margin-top: 0.5rem;
+    }
+    .seg {
+      height: 0.7rem;
+      border-radius: 0.2rem;
+      background: var(--track);
+      border: 1px solid var(--line-strong);
+    }
+    .seg.on {
+      background: var(--forest);
+      border-color: var(--forest-2);
+    }
+    .bet-jump {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin: 0.8rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .bet-jump a {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.6rem;
+      min-height: 44px;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--line);
+      background: var(--paper-2);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .bet-jump a:link, .bet-jump a:visited { color: var(--ink); }
+    .bet-jump a:hover { background: #efe8dc; }
+    .bet-jump a[data-hit="yes"] { box-shadow: inset 4px 0 0 var(--forest); border-color: var(--forest); }
+    .bet-jump a[data-hit="no"] { box-shadow: inset 4px 0 0 var(--line-strong); }
+    .jump-state:empty { display: none; }
+    .jump-state {
+      font-weight: 400;
+      font-size: 0.875rem;
+      color: var(--ink-soft);
+    }
+
+    .matrix-controls { gap: 0.55rem; margin-top: 0.75rem; }
+    .tablist { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tablist button {
+      min-height: 44px;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper-2);
+      cursor: pointer;
+    }
+    .tablist button:hover { background: #efe8dc; }
+    .tablist button[aria-selected="true"] {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+      box-shadow: inset 0 -3px 0 var(--ochre);
+    }
+    .tablist button[aria-selected="true"]:hover { background: var(--ink); color: var(--cream); }
+    .matrix-panels { margin-top: 0.75rem; }
+    .matrix-panels article + article { margin-top: 0.75rem; }
+    .js .matrix-panels article + article { margin-top: 0; }
+    .lens-kicker {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--rust-deep);
+    }
+
+    .scale-pin {
+      position: relative;
+      height: 1.35rem;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .scale-pin span { position: absolute; top: 0; white-space: nowrap; }
+    .scale-pin .pin-mid { transform: translateX(-50%); }
+    .scale-pin .pin-end { transform: translateX(-100%); }
+    .tl-controls .tl-btn,
+    .cost-plot .cost-row {
+      background: transparent;
+      border-color: transparent;
+      border-radius: 0.45rem;
+      padding: 0.45rem 0 0.55rem;
+    }
+    .tl-controls .tl-btn:hover,
+    .cost-plot .cost-row:hover { background: #efe8dc; }
+    .tl-controls .tl-btn[aria-selected="true"],
+    .cost-plot .cost-row[aria-checked="true"] {
+      background: #fff;
+      border-color: transparent;
+      box-shadow: inset 4px 0 0 var(--rust);
+    }
+    .tl-btn .track, .cost-row .track { margin-top: 0.45rem; }
+    .matrix-controls.js-only,
+    .tl-controls.js-only { display: none; }
+    .js .matrix-controls.js-only,
+    .js .tl-controls.js-only { display: grid; }
+    .cost-static { margin: 0.8rem 0 0; padding-left: 1.2rem; }
+    .cost-static li + li { margin-top: 0.45rem; }
+
+    .swatch.hatch-clay {
+      background: repeating-linear-gradient(-45deg, var(--clay), var(--clay) 3px, #e7cfc4 3px, #e7cfc4 6px);
+    }
+    .track .fill.d { background: var(--brown); }
+
     .sources a { overflow-wrap: anywhere; }
     sup a { text-decoration: none; font-weight: 700; }
     sup a:hover { text-decoration: underline; }
@@ -581,6 +803,9 @@
       .split { grid-template-columns: 1fr 1fr; align-items: start; }
       .cmp-grid { grid-template-columns: 1fr 1fr; }
       .phases { grid-template-columns: 1fr; }
+      .bet-jump { flex-direction: row; align-items: stretch; }
+      .bet-jump li { flex: 1 1 0; min-width: 0; display: flex; }
+      .bet-jump a { flex: 1 1 auto; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -592,8 +817,10 @@
     }
 
     @media (forced-colors: active) {
-      .nav-scroller a, .card, .panel, .phase, .ring { border: 1px solid CanvasText; }
-      a:focus-visible { outline: 3px solid CanvasText; }
+      .nav-scroller a, .card, .panel, .phase, .ring, .pain-btn, .tl-btn, .cost-row, .tablist button, .bet-jump a { border: 1px solid CanvasText; }
+      a:focus-visible, button:focus-visible { outline: 3px solid CanvasText; }
+      .seg { border: 1px solid CanvasText; }
+      .seg.on { background: CanvasText; }
     }
 
     @media print {
@@ -603,6 +830,13 @@
       .facts li, .band-total, .ring-core { background: #fff; color: #000; border: 1px solid #000; }
       a { text-decoration: underline; }
       section { break-inside: avoid; }
+      .js .matrix-panels article,
+      .js .tl-panel,
+      .matrix-panels article[hidden],
+      .tl-panel[hidden] { display: block !important; }
+      .js .matrix-panels article + article,
+      .tl-panels .tl-panel + .tl-panel { margin-top: 0.75rem; }
+      .js-only { display: none !important; }
     }
   </style>
 </head>
@@ -617,7 +851,7 @@
     <div class="wrap hero-inner">
       <p class="kicker">VIC Property Hub demo × PropertyME</p>
       <h1>AU residential PM mini&#8209;SaaS — first&#8209;cut study</h1>
-      <p class="deck">A page to forward: where the <a href="https://vicpropertyhuberp.vercel.app/">VIC Property Hub</a> browser demo sits against <a href="https://www.propertyme.com/">PropertyME</a>, and what the servers might cost if the wedge became a product. Researched 28 October 2026. USD list prices unless marked AUD.</p>
+      <p class="deck">A page to forward: where the <a href="https://vicpropertyhuberp.vercel.app/">VIC Property Hub</a> browser demo sits against <a href="https://www.propertyme.com/">PropertyME</a>, what the servers might cost, and three mini-SaaS bets in priority order. Researched 28 October 2026. USD list prices unless marked AUD.</p>
       <ul class="facts">
         <li>
           <span class="lbl">Demo</span>
@@ -642,6 +876,7 @@
     <div class="wrap nav-scroller" data-nav>
       <a href="#thesis">Thesis</a>
       <a href="#pain">Pain map</a>
+      <a href="#saas-bets">Bets</a>
       <a href="#demo">Demo</a>
       <a href="#compare">Compare</a>
       <a href="#costs">Costs</a>
@@ -674,6 +909,7 @@
           <li><p><strong>Keep the portals and the maintenance approval</strong> already sketched in the demo.</p></li>
           <li><p><strong>Leave the full ERP parked</strong> until bet 1 is real. Listings, a trades marketplace, and an inbox product wait with it.</p></li>
         </ol>
+        <p>Bets 1 to 3 are written out in <a href="#saas-bets">Three mini-SaaS bets</a>: the pain, what PropertyME already does, the gap a small desk can still win, and a costed plan. Bet 4 stays parked.</p>
         <p>The sharp slice already in the demo is one property file: arrears, a bond note, inspection acknowledgement, and landlord approval on a job.</p>
 
         <figure class="wedge" id="wedge">
@@ -697,7 +933,7 @@
     <section id="pain" aria-labelledby="pain-h">
       <div class="wrap">
         <h2 id="pain-h"><span class="num">02</span>Pain → function</h2>
-        <p class="lede">Why an agency pays, and the function that answers that pain. The order matches the bets above.</p>
+        <p class="lede">Why an agency pays, and the function that answers that pain. The order matches the three bets in the next section.</p>
         <div class="cards">
           <article class="card">
             <h3>Trust and end of month</h3>
@@ -739,9 +975,368 @@
       </div>
     </section>
 
+    <section id="saas-bets" aria-labelledby="saas-bets-h">
+      <div class="wrap">
+        <h2 id="saas-bets-h"><span class="num">03</span>Three mini-SaaS bets</h2>
+        <p class="lede">Ranked 28 October 2026 by liability, willingness to pay, buildability, and the gap a small Victorian desk still has beside PropertyME. Money ops is first: it is the highest-liability job in an Australian residential agency, it is why a suite gets bought, and a receipt-to-statement path fits the 8–14 week range while an agency that already has Manage PM can keep it. Notices are second: a wrong Victorian notice is a liability, and a national compliance module still leaves room for a VIC pack a small desk can run. Maintenance approval is third: the Hub demo already sketches the loop, the rest is a short polish, and a trades marketplace is a larger product than this wedge. Inspections, renewals, listings, and a full inbox stay parked until trust-lite is real.</p>
+
+        <aside class="callout callout-strong">
+          <h3>Disclaimer</h3>
+          <p>This section is part of the study. It is not legal advice, financial advice, tax advice, or a trust-accounting opinion. Do not call Priority 1 “trust accounting”, and do not ship Priority 2 as legal advice, until a solicitor and an accountant have reviewed the work. The <a href="https://vicpropertyhuberp.vercel.app/">VIC Property Hub</a> link is a friend’s browser demo (<kbd>vph41</kbd>). It is not this product. Dollar figures are the Phase A / B / C bands and the build-week ranges already on this page, researched 28 October 2026. Where this section has no vendor price, it says so.</p>
+        </aside>
+
+        <h3 class="subhead" id="pain-rank-h">Pain rank</h3>
+        <p>Six themes from the pain map. Select a row. The bets below pick up a mark. Cards stay on the page either way.</p>
+        <figure class="chart">
+          <figcaption>Filled segments are the rank: six for rank 1, one for rank 6. The length is the order on this page, 28 October 2026, not a measured score.</figcaption>
+          <div class="pain-list" role="radiogroup" aria-labelledby="pain-rank-h" data-pain-chart>
+            <button type="button" class="pain-btn" role="radio" data-pain="all" aria-checked="true">
+              <span class="pain-top"><span>All six pains</span><span class="sel-flag">Selected</span></span>
+              <span class="pain-sub">No filter. Shows every bet without a mark.</span>
+            </button>
+            <button type="button" class="pain-btn" role="radio" data-pain="trust" aria-checked="false" tabindex="-1">
+              <span class="pain-top"><span>Trust / end of month</span><span>Rank 1 <span class="sel-flag">· Selected</span></span></span>
+              <span class="pain-sub">Highest liability. Answers: Priority 1.</span>
+              <span class="segs" aria-hidden="true"><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span></span>
+            </button>
+            <button type="button" class="pain-btn" role="radio" data-pain="compliance" aria-checked="false" tabindex="-1">
+              <span class="pain-top"><span>Compliance and notices</span><span>Rank 2 <span class="sel-flag">· Selected</span></span></span>
+              <span class="pain-sub">A wrong notice is a liability. Answers: Priority 2.</span>
+              <span class="segs" aria-hidden="true"><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg"></span></span>
+            </button>
+            <button type="button" class="pain-btn" role="radio" data-pain="inbox" aria-checked="false" tabindex="-1">
+              <span class="pain-top"><span>The inbox</span><span>Rank 3 <span class="sel-flag">· Selected</span></span></span>
+              <span class="pain-sub">Hours and strain. Answers: Priority 1 and Priority 3. A full inbox product stays parked.</span>
+              <span class="segs" aria-hidden="true"><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg"></span><span class="seg"></span></span>
+            </button>
+            <button type="button" class="pain-btn" role="radio" data-pain="maint" aria-checked="false" tabindex="-1">
+              <span class="pain-top"><span>Maintenance handoff</span><span>Rank 4 <span class="sel-flag">· Selected</span></span></span>
+              <span class="pain-sub">The job stalls on approval. Answers: Priority 3.</span>
+              <span class="segs" aria-hidden="true"><span class="seg on"></span><span class="seg on"></span><span class="seg on"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></span>
+            </button>
+            <button type="button" class="pain-btn" role="radio" data-pain="inspect" aria-checked="false" tabindex="-1">
+              <span class="pain-top"><span>Inspections and renewals</span><span>Rank 5 <span class="sel-flag">· Selected</span></span></span>
+              <span class="pain-sub">Volume. Answers: none of the three bets. The demo already records check-in, routine, and check-out. Renewals stay parked.</span>
+              <span class="segs" aria-hidden="true"><span class="seg on"></span><span class="seg on"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></span>
+            </button>
+            <button type="button" class="pain-btn" role="radio" data-pain="small" aria-checked="false" tabindex="-1">
+              <span class="pain-top"><span>Small-roll economics</span><span>Rank 6 <span class="sel-flag">· Selected</span></span></span>
+              <span class="pain-sub">Suite price on a small desk. Answers: all three bets. Priority 1 is the sharpest cut.</span>
+              <span class="segs" aria-hidden="true"><span class="seg on"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></span>
+            </button>
+          </div>
+          <p class="chart-note" aria-live="polite" data-pain-live>All six pains. Select a rank to mark the bets that answer it. Arrow keys move the selection.</p>
+          <ul class="bet-jump">
+            <li><a href="#bet-trust" data-jump="1">Priority 1 · Trust-lite <span class="jump-state" data-jump-state></span></a></li>
+            <li><a href="#bet-vic" data-jump="2">Priority 2 · VIC notices <span class="jump-state" data-jump-state></span></a></li>
+            <li><a href="#bet-maint" data-jump="3">Priority 3 · Approval <span class="jump-state" data-jump-state></span></a></li>
+          </ul>
+        </figure>
+
+        <h3 class="subhead" id="gap-matrix-h">PropertyME, the gap, our wedge</h3>
+        <p>One bet at a time, then one lens. Arrow keys move inside each row of buttons. With scripts off, all nine notes stay open, each with its own heading.</p>
+        <div data-matrix>
+          <div class="matrix-controls js-only">
+            <div class="tablist" role="tablist" aria-label="Mini-SaaS bet" data-tabs="bet">
+              <button type="button" role="tab" id="tab-bet-1" data-bet="1" aria-selected="true" aria-controls="mx-1-pme">1 · Trust-lite</button>
+              <button type="button" role="tab" id="tab-bet-2" data-bet="2" aria-selected="false" tabindex="-1" aria-controls="mx-2-pme">2 · VIC notices</button>
+              <button type="button" role="tab" id="tab-bet-3" data-bet="3" aria-selected="false" tabindex="-1" aria-controls="mx-3-pme">3 · Approval</button>
+            </div>
+            <div class="tablist" role="tablist" aria-label="Lens" data-tabs="lens">
+              <button type="button" role="tab" id="tab-lens-pme" data-lens="pme" aria-selected="true" aria-controls="mx-1-pme">PropertyME</button>
+              <button type="button" role="tab" id="tab-lens-gap" data-lens="gap" aria-selected="false" tabindex="-1" aria-controls="mx-1-gap">The gap</button>
+              <button type="button" role="tab" id="tab-lens-ours" data-lens="ours" aria-selected="false" tabindex="-1" aria-controls="mx-1-ours">Our wedge</button>
+            </div>
+          </div>
+          <div class="matrix-panels">
+            <article class="panel is-on" id="mx-1-pme" data-mx data-bet="1" data-lens="pme" role="tabpanel" aria-labelledby="tab-bet-1 tab-lens-pme">
+              <p class="lens-kicker">Priority 1 · Trust-lite</p>
+              <h3>PropertyME today</h3>
+              <p>Manage PM describes trust accounting as native, woven in rather than bolted on. The pages name daily bank feeds, two-way reconciliation, real-time owner statements, bulk disbursements, MePay, and Trustless payments. Published scale: 1.9M+ properties, 6,400+ agencies.<sup><a href="#fn-pme">1</a></sup></p>
+            </article>
+            <article class="panel" id="mx-1-gap" data-mx data-bet="1" data-lens="gap" role="tabpanel" aria-labelledby="tab-bet-1 tab-lens-gap">
+              <p class="lens-kicker">Priority 1 · Trust-lite</p>
+              <h3>Where it still falls short</h3>
+              <p>Review themes in this study: too many clicks for reports, hard onboarding and advanced setup, pricing that feels harsh under about 20–50 doors.<sup><a href="#fn-study">3</a></sup> A small VIC desk can need receipt → allocate → owner statement without the rest of the suite. A companion beside PropertyME is the other shape, for that slice only.</p>
+            </article>
+            <article class="panel" id="mx-1-ours" data-mx data-bet="1" data-lens="ours" role="tabpanel" aria-labelledby="tab-bet-1 tab-lens-ours">
+              <p class="lens-kicker">Priority 1 · Trust-lite</p>
+              <h3>Our mini-SaaS</h3>
+              <p>Multi-tenant auth, a property file, receipt → allocate → owner payout, a PDF statement, and an audit trail. VIC-first, small rolls. Call the product trust accounting only after a solicitor and an accountant have reviewed it.</p>
+            </article>
+            <article class="panel" id="mx-2-pme" data-mx data-bet="2" data-lens="pme" role="tabpanel" aria-labelledby="tab-bet-2 tab-lens-pme">
+              <p class="lens-kicker">Priority 2 · VIC notices</p>
+              <h3>PropertyME today</h3>
+              <p>AiMe Comply covers state legislation. Compliance tracking covers smoke alarms, pools, and insurance. The pages mention notice automation. Lease renewals sit in Manage PM.<sup><a href="#fn-pme">1</a></sup></p>
+            </article>
+            <article class="panel" id="mx-2-gap" data-mx data-bet="2" data-lens="gap" role="tabpanel" aria-labelledby="tab-bet-2 tab-lens-gap">
+              <p class="lens-kicker">Priority 2 · VIC notices</p>
+              <h3>Where it still falls short</h3>
+              <p>A national module still asks a small desk to configure it. The same review themes say that setup is hard.<sup><a href="#fn-study">3</a></sup> The opening is a Victorian pack: the right templates and a due calendar, beside PropertyME or on its own for this slice.</p>
+            </article>
+            <article class="panel" id="mx-2-ours" data-mx data-bet="2" data-lens="ours" role="tabpanel" aria-labelledby="tab-bet-2 tab-lens-ours">
+              <p class="lens-kicker">Priority 2 · VIC notices</p>
+              <h3>Our mini-SaaS</h3>
+              <p>Solicitor-reviewed templates, a compliance calendar, and due dates on the property file. No legal-advice claim before that review.</p>
+            </article>
+            <article class="panel" id="mx-3-pme" data-mx data-bet="3" data-lens="pme" role="tabpanel" aria-labelledby="tab-bet-3 tab-lens-pme">
+              <p class="lens-kicker">Priority 3 · Approval handoff</p>
+              <h3>PropertyME today</h3>
+              <p>Jobs carry quotes, assigned trades, photos, and updates to owners and tenants. Owners and tenants have portals, and there is a PropertyMe app.<sup><a href="#fn-pme">1</a></sup></p>
+            </article>
+            <article class="panel" id="mx-3-gap" data-mx data-bet="3" data-lens="gap" role="tabpanel" aria-labelledby="tab-bet-3 tab-lens-gap">
+              <p class="lens-kicker">Priority 3 · Approval handoff</p>
+              <h3>Where it still falls short</h3>
+              <p>A trades marketplace is a lot of product for a micro roll. The Hub demo already lets a landlord approve or reject, and it stores a $500 threshold it does not enforce. The $500 figure is the demo’s sample on 28 October 2026, not a limit this study prescribes.<sup><a href="#fn-hub" id="fnref-hub">11</a></sup></p>
+            </article>
+            <article class="panel" id="mx-3-ours" data-mx data-bet="3" data-lens="ours" role="tabpanel" aria-labelledby="tab-bet-3 tab-lens-ours">
+              <p class="lens-kicker">Priority 3 · Approval handoff</p>
+              <h3>Our mini-SaaS</h3>
+              <p>Enforce the threshold the agency sets. Approve or reject on a phone. Send status back to the tenant portal. Add SMS later, via Twilio Australia, only when a pilot is live. Leave the trades marketplace parked.</p>
+            </article>
+          </div>
+        </div>
+
+        <h3 class="subhead">The three bets</h3>
+        <p>Each card is the plan for that bet: the pain, what PropertyME already does, the gap, what we would ship, then the action plan, the roadmap, and the cost.</p>
+        <div class="bet-stack">
+          <article class="panel bet" id="bet-trust" data-bet="1">
+            <p class="match-note" data-match-note hidden></p>
+            <p class="badge">Priority 1</p>
+            <h3>Trust-lite money ops</h3>
+            <p class="tag tag-pain">Highest pain · highest liability</p>
+            <dl class="bet-dl">
+              <dt>Pain</dt>
+              <dd>Receipting, allocation, owner payout, the end-of-month grind, and the audit trail. This is the highest-liability job in an Australian residential agency.</dd>
+              <dt>PropertyME today</dt>
+              <dd>Trust accounting is native on Manage PM. The pages name daily bank feeds, two-way reconciliation, real-time owner statements, bulk disbursements, MePay, and Trustless payments. Scale on that page: 1.9M+ properties, 6,400+ agencies.<sup><a href="#fn-pme">1</a></sup></dd>
+              <dt>Where a wedge can still win</dt>
+              <dd>Priced and complex for a tiny or small Victorian roll. Review themes in this study, under about 20–50 doors: reports take too many clicks, and onboarding and advanced configuration are hard.<sup><a href="#fn-study">3</a></sup> A small desk can buy a sharp receipt → allocate → owner statement path and skip the rest of the suite. The other buyer already has PropertyME and still wants that slice made calmer.</dd>
+              <dt>Our mini-SaaS</dt>
+              <dd>Trust-lite MVP. Multi-tenant auth, a property file, receipt → allocate → owner payout, a PDF statement, and an audit trail. Scope it VIC-first, for small rolls. Do not call it trust accounting until a solicitor and an accountant have reviewed it. The Hub demo has rent charges and a bond note. It does not have this payout path.</dd>
+              <dt>Action plan</dt>
+              <dd>
+                <ol>
+                  <li><strong>Weeks 0–2.</strong> Domain model, multi-tenant auth, property and lease skeleton, audit log schema.</li>
+                  <li><strong>Weeks 2–8.</strong> Receipt, allocate, and reverse. Owner disbursement as a draft. Statement PDF.</li>
+                  <li><strong>Weeks 8–14.</strong> Landlord statement view. Pilot with 1–3 Victorian agencies. Legal review gate before any “trust” wording.</li>
+                </ol>
+                <p class="line-note">These week numbers are the 14-week end of the 8–14 week range. The 8-week end is the same work, compressed. The study does not publish a separate short-end phase split.</p>
+              </dd>
+              <dt>Roadmap</dt>
+              <dd>First in the build order. Priority 2 can overlap the late weeks. The full ERP stays parked until this path is real.</dd>
+              <dt>Cost</dt>
+              <dd>Infra for a hosted pilot is Phase A, about US$45–80 / month. The US$45 floor inside that band is Vercel Pro US$20 plus Supabase Pro US$25. Build is 8–14 weeks: one strong full-stack developer and a part-time property-management advisor. Legal and accounting review is a separate budget. This study does not set a dollar figure for it (28 October 2026). Contractor day rates stay in <a href="#build">Build time</a> and are not retallied here.</dd>
+            </dl>
+          </article>
+
+          <article class="panel bet" id="bet-vic" data-bet="2">
+            <p class="match-note" data-match-note hidden></p>
+            <p class="badge">Priority 2</p>
+            <h3>VIC notice and compliance calendar</h3>
+            <p class="tag tag-pain">Law that moves · wrong notice, real liability</p>
+            <dl class="bet-dl">
+              <dt>Pain</dt>
+              <dd>Victorian tenancy law changes. Notices, plus the safety checks that sit with them: smoke alarms, pools, insurance. A wrong notice is a liability.</dd>
+              <dt>PropertyME today</dt>
+              <dd>AiMe Comply for state legislation. Compliance tracking for smoke alarms, pools, and insurance. Notice automation is mentioned on the pages. Lease renewals are part of Manage PM.<sup><a href="#fn-pme">1</a></sup></dd>
+              <dt>Where a wedge can still win</dt>
+              <dd>A national suite is a different product from a Victorian notice set a small desk can run without deep configuration. The review themes say setup and onboarding are hard.<sup><a href="#fn-study">3</a></sup> The wedge is that pack. Keep PropertyME, or use the pack alone for the compliance slice.</dd>
+              <dt>Our mini-SaaS</dt>
+              <dd>A VIC notice pack and a compliance calendar. Templates only after solicitor review. Due dates sit on the property file. Do not describe the pack as legal advice before that review.</dd>
+              <dt>Action plan</dt>
+              <dd>
+                <ol>
+                  <li><strong>Templates.</strong> Victorian notices, held until the solicitor review comes back.</li>
+                  <li><strong>Calendar.</strong> Notice due dates, plus smoke, pool, and insurance checks.</li>
+                  <li><strong>Property file.</strong> Surface those dates on the file the desk already opens.</li>
+                  <li><strong>Review gate.</strong> Nothing ships as a notice pack before that review.</li>
+                </ol>
+              </dd>
+              <dt>Roadmap</dt>
+              <dd>After trust-lite, or overlapping its late weeks. +4–8 weeks on top of Priority 1: templates, calendar, property-file surfacing, and the review gate.</dd>
+              <dt>Cost</dt>
+              <dd>Same infra bands as <a href="#costs">the cost section</a>. A pilot stays on Phase A, about US$45–80 / month. This bet does not add a second hosting bill in the study. Build is +4–8 weeks on top of Priority 1. Legal review is mandatory before ship, and unpriced here (28 October 2026).</dd>
+            </dl>
+          </article>
+
+          <article class="panel bet" id="bet-maint" data-bet="3">
+            <p class="match-note" data-match-note hidden></p>
+            <p class="badge">Priority 3</p>
+            <h3>Maintenance approval handoff</h3>
+            <p class="tag tag-pain">The job stalls · the inbox absorbs it</p>
+            <dl class="bet-dl">
+              <dt>Pain</dt>
+              <dd>The tenant reports a job, the landlord has to approve it, and the work stalls. MRI Software’s 2024 Voice of the Property Manager: 47% of property managers work more than 41 hours a week, and 54% report mental-health struggles.<sup><a href="#fn-mri">2</a></sup></dd>
+              <dt>PropertyME today</dt>
+              <dd>Jobs with quotes, assign trades, photos, and owner and tenant updates. Owner access, tenant access, and the PropertyMe app.<sup><a href="#fn-pme">1</a></sup></dd>
+              <dt>Where a wedge can still win</dt>
+              <dd>A trades marketplace and a full jobs suite are heavy for a micro roll. The Hub demo already has landlord Approve / Reject, and it stores a $500 threshold it does not enforce.<sup><a href="#fn-hub">11</a></sup> The sharp product enforces the threshold the agency sets, tells the landlord, and closes the loop. The $500 figure is the demo’s sample on 28 October 2026, not a limit this study prescribes.</dd>
+              <dt>Our mini-SaaS</dt>
+              <dd>Enforce the approval threshold. The landlord approves or rejects on a phone. Status goes back to the tenant portal. SMS comes later, and only when a pilot is live. The trades marketplace stays parked. Portals in the demo are the seed.</dd>
+              <dt>Action plan</dt>
+              <dd>
+                <ol>
+                  <li><strong>Mobile approval.</strong> The landlord can decide on a phone.</li>
+                  <li><strong>Threshold.</strong> Enforce the value the agency stored. The demo’s sample is $500, and it is not enforced yet.</li>
+                  <li><strong>Close the loop.</strong> Notify the landlord and return status to the tenant portal.</li>
+                  <li><strong>SMS, later.</strong> Twilio Australia, only once a pilot is live.</li>
+                </ol>
+              </dd>
+              <dt>Roadmap</dt>
+              <dd>+2–4 weeks of polish on the demo seed. The study draws this after the notice pack so the page stays in priority order. The work itself can start while trust-lite is still open.</dd>
+              <dt>Cost</dt>
+              <dd>Small incremental build: +2–4 weeks, on the same staffing assumption as <a href="#build">Build time</a>. Infra stays on the shared Phase A / B / C bands. SMS, when live: about US$0.0515 per outbound segment and about US$8.25 / month for a number.<sup><a href="#fn-twilio">8</a></sup> Per-message volume sits outside the monthly band.</dd>
+            </dl>
+          </article>
+        </div>
+
+        <h3 class="subhead" id="roadmap-h">Roadmap</h3>
+        <p>High-end sequence from the build chart: trust-lite at 14 weeks, then +8 for notices, then +4 for the approval polish, 26 weeks in a line. The low end of that same chart is 14 weeks (8 + 4 + 2). Priority 2 can overlap the late weeks of trust-lite. Priority 3 is demo polish and can start while trust-lite is still open. This drawing still places it last so the order stays 1, then 2, then 3. The black tick is the shorter end of a range: week 18 for notices (+4), week 24 for approval (+2).</p>
+        <div data-timeline>
+          <div class="tl-controls js-only">
+            <div class="scale-pin" aria-hidden="true">
+              <span class="pin-start" style="left:0%">0</span>
+              <span class="pin-mid" style="left:53.846%">14</span>
+              <span class="pin-mid" style="left:84.615%">22</span>
+              <span class="pin-end" style="left:100%">26</span>
+            </div>
+            <div role="tablist" aria-labelledby="roadmap-h">
+            <button type="button" class="tl-btn" role="tab" id="tab-tl-p1a" data-tl-btn="tl-p1a" aria-selected="true" aria-controls="tl-p1a">
+              <span class="pain-top"><span>Priority 1 · Weeks 0–2</span><span class="sel-flag">Selected</span></span>
+              <span class="pain-sub">Foundations</span>
+              <span class="track" aria-hidden="true"><span class="fill" style="left:0%;width:7.692%"></span></span>
+            </button>
+            <button type="button" class="tl-btn" role="tab" id="tab-tl-p1b" data-tl-btn="tl-p1b" aria-selected="false" tabindex="-1" aria-controls="tl-p1b">
+              <span class="pain-top"><span>Priority 1 · Weeks 2–8</span><span class="sel-flag">Selected</span></span>
+              <span class="pain-sub">Money path</span>
+              <span class="track" aria-hidden="true"><span class="fill" style="left:7.692%;width:23.077%"></span></span>
+            </button>
+            <button type="button" class="tl-btn" role="tab" id="tab-tl-p1c" data-tl-btn="tl-p1c" aria-selected="false" tabindex="-1" aria-controls="tl-p1c">
+              <span class="pain-top"><span>Priority 1 · Weeks 8–14</span><span class="sel-flag">Selected</span></span>
+              <span class="pain-sub">Pilot and review gate</span>
+              <span class="track" aria-hidden="true"><span class="fill" style="left:30.769%;width:23.077%"></span></span>
+            </button>
+            <button type="button" class="tl-btn" role="tab" id="tab-tl-p2" data-tl-btn="tl-p2" aria-selected="false" tabindex="-1" aria-controls="tl-p2">
+              <span class="pain-top"><span>Priority 2 · +4–8 weeks</span><span class="sel-flag">Selected</span></span>
+              <span class="pain-sub">VIC pack, after week 14 on this drawing</span>
+              <span class="track" aria-hidden="true"><span class="fill b" style="left:53.846%;width:30.769%"></span><span class="mark" style="left:69.231%"></span></span>
+            </button>
+            <button type="button" class="tl-btn" role="tab" id="tab-tl-p3" data-tl-btn="tl-p3" aria-selected="false" tabindex="-1" aria-controls="tl-p3">
+              <span class="pain-top"><span>Priority 3 · +2–4 weeks</span><span class="sel-flag">Selected</span></span>
+              <span class="pain-sub">Approval polish, after week 22 on this drawing</span>
+              <span class="track" aria-hidden="true"><span class="fill c" style="left:84.615%;width:15.385%"></span><span class="mark" style="left:92.308%"></span></span>
+            </button>
+            </div>
+          </div>
+          <div class="tl-panels">
+            <article class="panel tl-panel is-on" id="tl-p1a" data-tl-panel role="tabpanel" aria-labelledby="tab-tl-p1a">
+              <h3>Weeks 0–2 · Foundations</h3>
+              <ul>
+                <li>Domain model for properties, leases, receipts, allocations, and owner payouts.</li>
+                <li>Multi-tenant auth, so one agency cannot read another’s roll.</li>
+                <li>Property and lease skeleton.</li>
+                <li>Audit log schema: who changed what, and when.</li>
+              </ul>
+              <p>Inside the 8–14 week trust-lite build. One strong full-stack developer and a part-time PM advisor. Hosting, once a pilot is up, is Phase A, about US$45–80 / month. Legal review is a later gate in this same bet, and this study does not price it.</p>
+            </article>
+            <article class="panel tl-panel" id="tl-p1b" data-tl-panel role="tabpanel" aria-labelledby="tab-tl-p1b">
+              <h3>Weeks 2–8 · Money path</h3>
+              <ul>
+                <li>Receipt, allocate, and reverse.</li>
+                <li>Owner disbursement as a draft the pilot can read.</li>
+                <li>Owner statement as a PDF.</li>
+              </ul>
+              <p>Same 8–14 week envelope. Same Phase A band, about US$45–80 / month, once the pilot is hosted. Still no “trust accounting” wording.</p>
+            </article>
+            <article class="panel tl-panel" id="tl-p1c" data-tl-panel role="tabpanel" aria-labelledby="tab-tl-p1c">
+              <h3>Weeks 8–14 · Pilot and review gate</h3>
+              <ul>
+                <li>Landlord portal: statement view.</li>
+                <li>Pilot with 1–3 Victorian agencies.</li>
+                <li>Solicitor and accountant review before any trust wording.</li>
+              </ul>
+              <p>Phase A, about US$45–80 / month, for that pilot. The Priority 1 build clock ends in this window (8–14 weeks). Legal review is a separate budget. No dollar figure in this study (28 October 2026).</p>
+            </article>
+            <article class="panel tl-panel" id="tl-p2" data-tl-panel role="tabpanel" aria-labelledby="tab-tl-p2">
+              <h3>Priority 2 · +4–8 weeks</h3>
+              <ul>
+                <li>Victorian notice templates, held for solicitor review.</li>
+                <li>Compliance calendar: notices, smoke, pool, insurance.</li>
+                <li>Due dates on the property file.</li>
+                <li>Review gate before ship.</li>
+              </ul>
+              <p>Build is +4–8 weeks on top of Priority 1. The bar runs from week 14 to week 22 on the high-end drawing. The tick at week 18 is the +4 end. Infra stays on the shared bands: Phase A about US$45–80 / month while it is a pilot, Phase B about US$80–150 / month in early commercial use, Phase C about US$200–600+ / month if the book grows. Legal review is mandatory before ship, and unpriced here.</p>
+            </article>
+            <article class="panel tl-panel" id="tl-p3" data-tl-panel role="tabpanel" aria-labelledby="tab-tl-p3">
+              <h3>Priority 3 · +2–4 weeks</h3>
+              <ul>
+                <li>Enforce the approval threshold. The demo’s stored sample is $500.</li>
+                <li>Landlord approve or reject on a phone.</li>
+                <li>Status back to the tenant portal.</li>
+                <li>SMS only when a pilot is live.</li>
+              </ul>
+              <p>Build is +2–4 weeks on the demo seed. The bar runs from week 22 to week 26 on this drawing. The tick at week 24 is the +2 end. Infra stays on the shared phase band. SMS, when switched on: about US$0.0515 per outbound segment and about US$8.25 / month for a number. Message volume sits outside the band. The trades marketplace stays parked.</p>
+            </article>
+          </div>
+        </div>
+        <ul class="legend">
+          <li><span class="swatch c1" aria-hidden="true"></span> Priority 1 phases, on the 14-week plan.</li>
+          <li><span class="swatch c2" aria-hidden="true"></span> Priority 2. Bar is the +8 end. Tick is the +4 end.</li>
+          <li><span class="swatch c3" aria-hidden="true"></span> Priority 3. Bar is the +4 end. Tick is the +2 end. Stripes match the build-time chart.</li>
+        </ul>
+
+        <h3 class="subhead" id="cost-bet-h">Cost by bet</h3>
+        <p>Build weeks and the monthly infra band are different units, so they do not share one bar. Switch the measure. All three bets draw the same infra bar on purpose: one agency, one hosting bill. Priority 3’s SMS line is extra, and only when texts are on.</p>
+        <figure class="chart" data-cost>
+          <figcaption id="cost-bet-cap">Build-week ranges on a 0–14 week axis. Phase A, B, and C redraw every bet onto that shared monthly band.</figcaption>
+          <div class="tablist js-only" role="radiogroup" aria-labelledby="cost-bet-h" data-cost-mode>
+            <button type="button" role="radio" data-mode="weeks" aria-checked="true">Build weeks</button>
+            <button type="button" role="radio" data-mode="a" aria-checked="false" tabindex="-1">Phase A</button>
+            <button type="button" role="radio" data-mode="b" aria-checked="false" tabindex="-1">Phase B</button>
+            <button type="button" role="radio" data-mode="c" aria-checked="false" tabindex="-1">Phase C</button>
+          </div>
+          <div class="cost-plot">
+            <div class="scale-pin" data-cost-scale aria-hidden="true">
+              <span class="pin-start" style="left:0%">0</span>
+              <span class="pin-mid" style="left:28.571%">4</span>
+              <span class="pin-mid" style="left:57.143%">8</span>
+              <span class="pin-mid" style="left:85.714%">12</span>
+              <span class="pin-end" style="left:100%">14</span>
+            </div>
+            <div role="radiogroup" aria-label="Highlight a bet" data-cost-bets>
+              <button type="button" class="cost-row" role="radio" data-cost-bet="1" aria-checked="true">
+                <span class="chart-top"><span>Priority 1 · Trust-lite <span class="sel-flag">· Selected</span></span><span data-cost-label="1">8–14 weeks</span></span>
+                <span class="track" aria-hidden="true"><span class="fill" data-cost-fill="1" style="left:57.143%;width:42.857%"></span></span>
+              </button>
+              <button type="button" class="cost-row" role="radio" data-cost-bet="2" aria-checked="false" tabindex="-1">
+                <span class="chart-top"><span>Priority 2 · VIC notices <span class="sel-flag">· Selected</span></span><span data-cost-label="2">+4–8 weeks</span></span>
+                <span class="track" aria-hidden="true"><span class="fill b" data-cost-fill="2" style="left:28.571%;width:28.571%"></span></span>
+              </button>
+              <button type="button" class="cost-row" role="radio" data-cost-bet="3" aria-checked="false" tabindex="-1">
+                <span class="chart-top"><span>Priority 3 · Approval <span class="sel-flag">· Selected</span></span><span data-cost-label="3">+2–4 weeks</span></span>
+                <span class="track" aria-hidden="true"><span class="fill c" data-cost-fill="3" style="left:14.286%;width:14.286%"></span></span>
+              </button>
+            </div>
+          </div>
+          <p class="chart-note" aria-live="polite" aria-atomic="true" data-cost-live>Axis is how many weeks the bet takes, not when it starts. Priority 1 sits between 8 and 14. Priority 2 sits between 4 and 8 extra weeks. Priority 3 sits between 2 and 4 extra weeks.</p>
+        </figure>
+        <ul class="cost-static">
+          <li><strong>Priority 1.</strong> Build 8–14 weeks. Infra follows the shared bands: Phase A about US$45–80 / month, Phase B about US$80–150 / month, Phase C about US$200–600+ / month. Legal review of trust wording is outside the band and unpriced (28 October 2026).</li>
+          <li><strong>Priority 2.</strong> Build +4–8 weeks on top of Priority 1. Same infra bands. Solicitor review before ship, unpriced here.</li>
+          <li><strong>Priority 3.</strong> Build +2–4 weeks on the demo seed. Same infra bands. SMS when live: about US$0.0515 / segment and about US$8.25 / month for a number. Volume is extra.</li>
+        </ul>
+        <ul class="legend">
+          <li><span class="swatch c1" aria-hidden="true"></span> Priority 1</li>
+          <li><span class="swatch c2" aria-hidden="true"></span> Priority 2</li>
+          <li><span class="swatch c3" aria-hidden="true"></span> Priority 3. Stripes match the build-time chart. On the infra views, stripe and solid are the same dollars.</li>
+        </ul>
+      </div>
+    </section>
+
     <section id="demo" aria-labelledby="demo-h">
       <div class="wrap">
-        <h2 id="demo-h"><span class="num">03</span>What the Hub demo has</h2>
+        <h2 id="demo-h"><span class="num">04</span>What the Hub demo has</h2>
         <p class="lede">Honest inventory of <a href="https://vicpropertyhuberp.vercel.app/">vicpropertyhuberp.vercel.app</a> as studied on 28 October 2026. Sample Melbourne book, in AUD. Tags on the product: Property-centred, Task-focused, Audit-ready. This is not a production system.</p>
 
         <ul class="meta-list">
@@ -796,7 +1391,7 @@
 
     <section id="compare" aria-labelledby="compare-h">
       <div class="wrap">
-        <h2 id="compare-h"><span class="num">04</span>Hub vs PropertyME</h2>
+        <h2 id="compare-h"><span class="num">05</span>Hub vs PropertyME</h2>
         <p class="lede">Compact read. The PropertyME column follows the public home page and the Manage PM page.<sup><a href="#fn-pme">1</a></sup> Where this study names a gap and those pages use different words, the cell says so. GST, RTBA lodgement, and a packaged VIC notice set are in that second group.</p>
 
         <div class="cmp">
@@ -855,7 +1450,7 @@
 
     <section id="costs" aria-labelledby="costs-h">
       <div class="wrap">
-        <h2 id="costs-h"><span class="num">05</span>What the servers might cost</h2>
+        <h2 id="costs-h"><span class="num">06</span>What the servers might cost</h2>
         <aside class="callout callout-strong">
           <h3>Read this before the numbers</h3>
           <p>USD list estimates, researched 28 October 2026. Vendors change rates, add tax, and bill overages. These bands are not invoices, not a quote, and not advice. Confirm each figure on the linked pricing page before spending. The dollar bands below are infrastructure. People, legal review, migration, and support sit outside them.</p>
@@ -1112,8 +1707,8 @@
 
     <section id="build" aria-labelledby="build-h">
       <div class="wrap">
-        <h2 id="build-h"><span class="num">06</span>Build time</h2>
-        <p class="lede">Order-of-magnitude ranges from the study, not a schedule and not a quote. Assumption: one strong full-stack developer, plus a property-management advisor part-time. Founder-built, the cash outlay until the first paying customer is the infrastructure above.</p>
+        <h2 id="build-h"><span class="num">07</span>Build time</h2>
+        <p class="lede">Order-of-magnitude ranges from the study, not a schedule and not a quote. Assumption: one strong full-stack developer, plus a property-management advisor part-time. Founder-built, the cash outlay until the first paying customer is the infrastructure above. The same ranges drive the roadmap and the cost chart in <a href="#saas-bets">Three mini-SaaS bets</a>.</p>
 
         <ol class="rail">
           <li>
@@ -1166,7 +1761,7 @@
 
     <section id="caveats" aria-labelledby="caveats-h">
       <div class="wrap">
-        <h2 id="caveats-h"><span class="num">07</span>Caveats</h2>
+        <h2 id="caveats-h"><span class="num">08</span>Caveats</h2>
         <h3>What will hurt if it is waved through</h3>
         <ul>
           <li><strong>Trust correctness and the audit trail</strong> are the product risk. The screens are the smaller part.</li>
@@ -1178,6 +1773,7 @@
         <aside class="callout callout-strong" style="margin-top:1.25rem">
           <h3>Disclaimer</h3>
           <p>This page is a study for a conversation. It is not legal advice, financial advice, tax advice, or a trust-accounting opinion. Trust accounting, owner disbursements, GST, and Victorian notices need a solicitor and an accountant before anyone offers them. Do not call the product “trust accounting” until that review exists.</p>
+          <p><a href="#saas-bets">Three mini-SaaS bets</a> uses the same limit. Priority 1 is a receipt, allocation, payout, and statement path. Priority 2 is a notice pack and a calendar. Neither ships as advice until that review exists. Priority 3 enforces an approval threshold the demo already stores. It is not a trades marketplace.</p>
           <p>The <a href="https://vicpropertyhuberp.vercel.app/">VIC Property Hub</a> link is a browser demo. It is not a production SaaS. It does not take signups and it does not hold a real trust account.</p>
           <p>Prices are list estimates gathered on 28 October 2026. They will move. Phase bands (~US$45–80, ~US$80–150, ~US$200–600+) are the study’s roll-ups. The worked addition in Phase B is arithmetic on listed lines, labelled as such. Contractor day rates are a market ballpark. Build weeks assume the staffing above and will move when a real scope is written.</p>
         </aside>
@@ -1195,7 +1791,7 @@
           <li id="fn-twilio">Twilio SMS pricing for Australia, <a href="https://www.twilio.com/en-us/sms/pricing/au">twilio.com/en-us/sms/pricing/au</a>. Outbound US$0.0515 per segment. Mobile number US$8.25 / month. The page has described pricing as current as of October 2026, and says prices and carrier fees can change. <a href="#fnref-twilio">Back</a></li>
           <li id="fn-r2">Cloudflare R2 pricing, <a href="https://developers.cloudflare.com/r2/pricing/">developers.cloudflare.com/r2/pricing</a>. Free tier 10 GB-month. Egress to the internet is free. <a href="#fnref-r2">Back</a></li>
           <li id="fn-sentry">Sentry pricing, <a href="https://sentry.io/pricing/">sentry.io/pricing</a>. Developer plan free. Team plan shown at US$26 / month. <a href="#fnref-sentry">Back</a></li>
-          <li id="fn-hub">VIC Property Hub demo, <a href="https://vicpropertyhuberp.vercel.app/">vicpropertyhuberp.vercel.app</a>. Behaviour described in this study as of 28 October 2026. Browser demo only.</li>
+          <li id="fn-hub">VIC Property Hub demo, <a href="https://vicpropertyhuberp.vercel.app/">vicpropertyhuberp.vercel.app</a>. Behaviour described in this study as of 28 October 2026, including landlord approve / reject and a stored $500 maintenance threshold that is not enforced. Browser demo only. A friend’s prototype, not the product in section 03. <a href="#fnref-hub">Back</a></li>
         </ol>
       </div>
     </section>
@@ -1244,6 +1840,221 @@
       }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
 
       sections.forEach(function (section) { observer.observe(section); });
+    })();
+  </script>
+  <script>
+    (function () {
+      function wireChoice(group, attr, onChange) {
+        if (!group) return;
+        var items = Array.prototype.slice.call(group.querySelectorAll("[role='radio'], [role='tab']"));
+        if (!items.length) return;
+
+        function select(item, focus) {
+          items.forEach(function (el) {
+            var on = el === item;
+            el.setAttribute(attr, on ? "true" : "false");
+            el.tabIndex = on ? 0 : -1;
+          });
+          if (focus) item.focus();
+          onChange(item);
+        }
+
+        items.forEach(function (item, index) {
+          item.tabIndex = item.getAttribute(attr) === "true" ? 0 : -1;
+          item.addEventListener("click", function () { select(item, false); });
+          item.addEventListener("keydown", function (event) {
+            var next = null;
+            if (event.key === "ArrowRight" || event.key === "ArrowDown") next = items[(index + 1) % items.length];
+            else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = items[(index - 1 + items.length) % items.length];
+            else if (event.key === "Home") next = items[0];
+            else if (event.key === "End") next = items[items.length - 1];
+            else return;
+            event.preventDefault();
+            select(next, true);
+          });
+        });
+      }
+
+      var painCopy = {
+        all: "All six pains. No bet is marked. Rank length is the order on this page, 28 October 2026, not a measured score.",
+        trust: "Trust and end of month is the highest-liability job. Priority 1 answers it: receipt, allocate, owner payout, statement, and an audit trail.",
+        compliance: "Victorian notices and safety checks are Priority 2. A wrong notice is a liability, so the pack waits on solicitor review.",
+        inbox: "The inbox eases when Priority 1 shows an owner statement and Priority 3 returns approval status to the tenant. A full inbox product stays parked. MRI, 2024: 47% of property managers work more than 41 hours a week, and 54% report mental-health struggles.",
+        maint: "The maintenance stall is Priority 3. Enforce the approval threshold, let the landlord decide on a phone, and send the status back.",
+        inspect: "Inspections and renewals are not one of these three bets. The demo already has check-in, routine, and check-out. Renewals stay parked. Priority 2 dates smoke, pool, and insurance checks, which is a different calendar from a routine inspection.",
+        small: "Small-roll economics shapes all three bets. Priority 1 is the sharpest cut: the money path for a desk of about 20–50 doors. Priorities 2 and 3 can sit beside PropertyME."
+      };
+      var painBets = {
+        all: null,
+        trust: ["1"],
+        compliance: ["2"],
+        inbox: ["1", "3"],
+        maint: ["3"],
+        inspect: [],
+        small: ["1", "2", "3"]
+      };
+
+      var painChart = document.querySelector("[data-pain-chart]");
+      if (painChart) {
+        function applyPain(id) {
+          var hits = painBets[id] || [];
+          var filtering = id !== "all";
+          Array.prototype.forEach.call(document.querySelectorAll(".bet"), function (card) {
+            var note = card.querySelector("[data-match-note]");
+            if (!filtering) {
+              card.removeAttribute("data-match");
+              if (note) {
+                note.hidden = true;
+                note.textContent = "";
+                note.removeAttribute("data-kind");
+              }
+              return;
+            }
+            var yes = hits.indexOf(card.getAttribute("data-bet")) !== -1;
+            card.setAttribute("data-match", yes ? "yes" : "no");
+            if (note) {
+              note.hidden = false;
+              note.setAttribute("data-kind", yes ? "yes" : "no");
+              note.textContent = yes ? "Answers this pain" : "Does not take this pain as its job";
+            }
+          });
+          Array.prototype.forEach.call(document.querySelectorAll("[data-jump]"), function (link) {
+            var state = link.querySelector("[data-jump-state]");
+            if (!filtering) {
+              link.removeAttribute("data-hit");
+              if (state) state.textContent = "";
+              return;
+            }
+            var yes = hits.indexOf(link.getAttribute("data-jump")) !== -1;
+            link.setAttribute("data-hit", yes ? "yes" : "no");
+            if (state) state.textContent = yes ? "Answers this pain" : "Not this pain";
+          });
+          var live = document.querySelector("[data-pain-live]");
+          if (live && painCopy[id]) live.textContent = painCopy[id];
+        }
+        wireChoice(painChart, "aria-checked", function (radio) {
+          applyPain(radio.getAttribute("data-pain"));
+        });
+      }
+
+      var matrix = document.querySelector("[data-matrix]");
+      if (matrix) {
+        var mxBet = "1";
+        var mxLens = "pme";
+        var mxPanels = matrix.querySelectorAll("[data-mx]");
+        function showMatrix() {
+          var id = "mx-" + mxBet + "-" + mxLens;
+          Array.prototype.forEach.call(mxPanels, function (panel) {
+            panel.classList.toggle("is-on", panel.id === id);
+          });
+          var betTab = matrix.querySelector("[data-tabs='bet'] [data-bet='" + mxBet + "']");
+          var lensTab = matrix.querySelector("[data-tabs='lens'] [data-lens='" + mxLens + "']");
+          if (betTab) betTab.setAttribute("aria-controls", id);
+          if (lensTab) lensTab.setAttribute("aria-controls", id);
+        }
+        wireChoice(matrix.querySelector("[data-tabs='bet']"), "aria-selected", function (tab) {
+          mxBet = tab.getAttribute("data-bet");
+          showMatrix();
+        });
+        wireChoice(matrix.querySelector("[data-tabs='lens']"), "aria-selected", function (tab) {
+          mxLens = tab.getAttribute("data-lens");
+          showMatrix();
+        });
+        showMatrix();
+      }
+
+      var timeline = document.querySelector("[data-timeline]");
+      if (timeline) {
+        var tlPanels = timeline.querySelectorAll("[data-tl-panel]");
+        wireChoice(timeline.querySelector("[role='tablist']"), "aria-selected", function (tab) {
+          var id = tab.getAttribute("aria-controls");
+          Array.prototype.forEach.call(tlPanels, function (panel) {
+            panel.classList.toggle("is-on", panel.id === id);
+          });
+        });
+      }
+
+      var cost = document.querySelector("[data-cost]");
+      if (cost) {
+        var modes = {
+          weeks: {
+            note: "Axis is how many weeks the bet takes, not when it starts. Priority 1 sits between 8 and 14. Priority 2 sits between 4 and 8 extra weeks. Priority 3 sits between 2 and 4 extra weeks.",
+            ticks: [["0", 0], ["4", 400 / 14], ["8", 800 / 14], ["12", 1200 / 14], ["14", 100]],
+            bars: {
+              "1": [800 / 14, 600 / 14, "8–14 weeks"],
+              "2": [400 / 14, 400 / 14, "+4–8 weeks"],
+              "3": [200 / 14, 200 / 14, "+2–4 weeks"]
+            }
+          },
+          a: {
+            note: "Phase A is about US$45–80 / month, shared by all three bets. The US$45 floor is Vercel Pro US$20 plus Supabase Pro US$25. The study does not itemise the rest of the band.",
+            ticks: [["$0", 0], ["$40", 25], ["$80", 50], ["$120", 75], ["$160", 100]],
+            bars: {
+              "1": [45 / 160 * 100, 35 / 160 * 100, "US$45–80 / mo"],
+              "2": [45 / 160 * 100, 35 / 160 * 100, "US$45–80 / mo"],
+              "3": [45 / 160 * 100, 35 / 160 * 100, "US$45–80 / mo"]
+            }
+          },
+          b: {
+            note: "Phase B is about US$80–150 / month before SMS volume, and it is still one shared bill. A launch month in the study can sit near US$120, inside this band.",
+            ticks: [["$0", 0], ["$40", 25], ["$80", 50], ["$120", 75], ["$160", 100]],
+            bars: {
+              "1": [50, 43.75, "US$80–150 / mo"],
+              "2": [50, 43.75, "US$80–150 / mo"],
+              "3": [50, 43.75, "US$80–150 / mo"]
+            }
+          },
+          c: {
+            note: "Phase C is about US$200–600+ / month. The bar runs to US$600 because the top is open: texts and PDF egress are why. One shared bill, not three.",
+            ticks: [["0", 0], ["150", 25], ["300", 50], ["450", 75], ["600", 100]],
+            bars: {
+              "1": [200 / 600 * 100, 400 / 600 * 100, "US$200–600+ / mo"],
+              "2": [200 / 600 * 100, 400 / 600 * 100, "US$200–600+ / mo"],
+              "3": [200 / 600 * 100, 400 / 600 * 100, "US$200–600+ / mo"]
+            }
+          }
+        };
+        var betNotes = {
+          "1": "Priority 1, trust-lite money ops. Build 8–14 weeks with one strong full-stack developer and a part-time PM advisor. Legal and accounting review is a separate budget. This study does not price it (28 October 2026).",
+          "2": "Priority 2, VIC notice pack and compliance calendar. Build is +4–8 weeks on top of Priority 1. Solicitor review is mandatory before ship, and unpriced in this study (28 October 2026).",
+          "3": "Priority 3, maintenance approval handoff. Build is +2–4 weeks on the demo seed. SMS only when live: about US$0.0515 per outbound segment and about US$8.25 / month for a number. Volume sits outside the phase band."
+        };
+        var costMode = "weeks";
+        var costBet = "1";
+        var ticks = cost.querySelectorAll("[data-cost-scale] span");
+        var live = cost.querySelector("[data-cost-live]");
+
+        function paintCost() {
+          var spec = modes[costMode];
+          if (!spec) return;
+          Array.prototype.forEach.call(ticks, function (tick, index) {
+            if (!spec.ticks[index]) return;
+            tick.textContent = spec.ticks[index][0];
+            tick.style.left = spec.ticks[index][1] + "%";
+          });
+          Object.keys(spec.bars).forEach(function (key) {
+            var bar = spec.bars[key];
+            var fill = cost.querySelector("[data-cost-fill='" + key + "']");
+            var label = cost.querySelector("[data-cost-label='" + key + "']");
+            if (fill) {
+              fill.style.left = bar[0] + "%";
+              fill.style.width = bar[1] + "%";
+            }
+            if (label) label.textContent = bar[2];
+          });
+          if (live) live.textContent = spec.note + " " + betNotes[costBet];
+        }
+
+        wireChoice(cost.querySelector("[data-cost-mode]"), "aria-checked", function (radio) {
+          costMode = radio.getAttribute("data-mode");
+          paintCost();
+        });
+        wireChoice(cost.querySelector("[data-cost-bets]"), "aria-checked", function (radio) {
+          costBet = radio.getAttribute("data-cost-bet");
+          paintCost();
+        });
+        paintCost();
+      }
     })();
   </script>
 </body>
