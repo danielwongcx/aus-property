@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#1c1915">
+  <meta name="format-detection" content="telephone=no">
+  <title>AU residential PM mini-SaaS — first-cut study</title>
+  <meta name="description" content="First-cut study of a VIC-first residential property-management mini-SaaS: the VIC Property Hub browser demo read against PropertyME, plus USD list-price server costs. Researched 28 October 2026.">
+  <meta property="og:title" content="AU residential PM mini-SaaS — first-cut study">
+  <meta property="og:description" content="VIC Property Hub demo × PropertyME, with a 28 October 2026 infrastructure cost cut. A study, not a product.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielwongcx.github.io/aus-property/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,520;9..144,640&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f3efe7;
+      --paper-2: #faf7f2;
+      --ink: #1c1915;
+      --ink-soft: #3f3a33;
+      --muted: #4a453e;
+      --line: #e0d6c8;
+      --line-strong: #cfc3b2;
+      --rust: #6e2c1c;
+      --rust-deep: #5c2414;
+      --forest: #1f3d34;
+      --forest-2: #245246;
+      --clay: #8a3b24;
+      --brown: #5c4a32;
+      --track: #e4dcd0;
+      --ochre: #e7d3b0;
+      --hero: #1c1915;
+      --hero-2: #2a2622;
+      --cream: #f3efe7;
+      --cream-dim: #e6ddd2;
+      --link: #6e2c1c;
+      --serif: "Fraunces", "Iowan Old Style", Palatino, Georgia, serif;
+      --sans: "Atkinson Hyperlegible", "Segoe UI", sans-serif;
+      --nav-h: 4.25rem;
+      --measure: 44rem;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: auto; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+    }
+
+    img, svg { max-width: 100%; }
+
+    a:link, a:visited { color: var(--link); }
+    a:hover { color: var(--rust-deep); }
+    a:focus-visible {
+      outline: 3px solid var(--rust);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 1rem;
+      top: -5rem;
+      z-index: 30;
+      background: #fff;
+      color: var(--ink);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+    }
+    .skip:focus { top: 0.75rem; }
+
+    .wrap {
+      width: min(100%, calc(var(--measure) + 2.5rem));
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Masthead + hero */
+    .hero {
+      background: var(--hero);
+      color: var(--cream);
+    }
+    .mast {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.35rem 1rem;
+      align-items: baseline;
+      padding-block: 1rem 0.25rem;
+      font-size: 0.875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+    }
+    .mast strong { color: var(--cream); font-weight: 700; letter-spacing: 0.12em; }
+    .hero-inner { padding-block: 1.5rem 2rem; }
+    .kicker {
+      margin: 0 0 0.75rem;
+      font-size: 0.875rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #f0d2c4;
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 640;
+      font-size: clamp(2rem, 7.4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      max-width: 11em;
+    }
+    .deck {
+      margin: 1rem 0 0;
+      max-width: 38rem;
+      color: var(--cream-dim);
+      font-size: 1.125rem;
+      line-height: 1.45;
+    }
+    .hero a:link, .hero a:visited { color: #f6d7cb; }
+    .hero a:hover { color: #fff; }
+    .hero a:focus-visible { outline-color: #f6d7cb; }
+
+    .facts {
+      display: grid;
+      gap: 0.6rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .facts li {
+      background: var(--hero-2);
+      border: 1px solid #3d3832;
+      border-radius: 0.75rem;
+      padding: 0.8rem 0.9rem;
+    }
+    .facts .lbl {
+      display: block;
+      font-size: 0.875rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #f0d2c4;
+    }
+    .facts strong {
+      display: block;
+      margin-top: 0.15rem;
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 640;
+      color: var(--cream);
+    }
+    .facts span.detail { color: var(--cream-dim); font-size: 0.9375rem; }
+
+    /* Nav */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(243, 239, 231, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .nav-scroller {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x proximity;
+      padding-block: 0.7rem;
+      scrollbar-width: thin;
+    }
+    .nav-scroller a {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 0.95rem;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper-2);
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.9375rem;
+    }
+    .nav-scroller a:link, .nav-scroller a:visited { color: var(--ink); }
+    .nav-scroller a:hover { background: #efe8dc; }
+    .nav-scroller a[aria-current="true"] {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+    .nav-scroller a[aria-current="true"]:focus-visible { outline-color: #f6d7cb; }
+    @media (max-width: 719px) {
+      .nav-wrap::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 1.5rem;
+        pointer-events: none;
+        background: linear-gradient(to right, rgba(243, 239, 231, 0), var(--paper) 85%);
+      }
+    }
+
+    main { padding-bottom: 3rem; }
+
+    section {
+      padding-block: 2.25rem;
+      border-top: 1px solid var(--line);
+      scroll-margin-top: calc(var(--nav-h) + 0.5rem);
+    }
+    section:first-of-type { border-top: 0; }
+
+    h2 {
+      margin: 0 0 0.75rem;
+      font-family: var(--serif);
+      font-weight: 640;
+      font-size: clamp(1.7rem, 4.5vw, 2.15rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    h2 .num {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-family: var(--sans);
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--rust);
+    }
+    h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 640;
+      font-size: 1.25rem;
+      line-height: 1.25;
+    }
+    .lede { margin: 0 0 1.25rem; max-width: 40rem; color: var(--ink-soft); }
+    p { margin: 0.6rem 0; }
+    .lede + p { margin-top: 0; }
+
+    .bets { margin: 1rem 0 0; padding: 0; list-style: none; counter-reset: bet; }
+    .bets li {
+      counter-increment: bet;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.85rem 0;
+      border-top: 1px solid var(--line);
+    }
+    .bets li::before {
+      content: counter(bet);
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      color: var(--rust);
+      line-height: 1.2;
+    }
+    .bets strong { font-weight: 700; }
+
+    /* Wedge */
+    .wedge { margin: 1.5rem 0 0; }
+    .wedge figcaption, .chart figcaption {
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .ring { border-radius: 1.1rem; padding: 0.9rem 0.95rem 1rem; }
+    .ring p { margin: 0.25rem 0 0; }
+    .ring-label {
+      margin: 0;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .ring-outer { background: #e8e1d6; border: 1px solid #d5cbbd; }
+    .ring-outer > .ring-label { color: var(--rust-deep); }
+    .ring-mid {
+      background: var(--paper-2);
+      border: 1px dashed #b7ab9c;
+      margin-top: 0.8rem;
+    }
+    .ring-mid > .ring-label { color: var(--rust-deep); }
+    .ring-core {
+      background: var(--forest);
+      color: var(--cream);
+      margin-top: 0.8rem;
+    }
+    .ring-core .ring-label { color: #f0d2c4; }
+    .ring-core p:last-child {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      line-height: 1.25;
+      margin-top: 0.35rem;
+    }
+
+    /* Cards, demo, compare */
+    .cards, .split, .phases { display: grid; gap: 0.75rem; }
+    .card, .panel, .phase, .cmp article, .callout {
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+      padding: 0.95rem 1rem 1.05rem;
+    }
+    .card .tag, .panel .tag, .cmp .who {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .tag-pain { color: var(--rust-deep); }
+    .tag-fn { color: var(--forest); }
+    .card .fn {
+      margin-top: 0.7rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid var(--line);
+    }
+    .panel h3 { margin-bottom: 0.4rem; }
+    .panel.built { box-shadow: inset 3px 0 0 var(--forest); }
+    .panel.gap { box-shadow: inset 3px 0 0 var(--clay); }
+    .panel ul, .callout ul { margin: 0.4rem 0 0; padding-left: 1.15rem; }
+    .panel li + li, .callout li + li { margin-top: 0.35rem; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.7rem 0 0; padding: 0; list-style: none; }
+    .chips li {
+      background: #efe8dc;
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.9375rem;
+    }
+
+    .meta-list { margin: 0; padding: 0; list-style: none; }
+    .meta-list li {
+      display: grid;
+      gap: 0.1rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .meta-list li:last-child { border-bottom: 0; }
+    .meta-list .lbl {
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--rust-deep);
+    }
+    code, kbd {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      color: var(--ink);
+      background: #efe8dc;
+      padding: 0.05em 0.35em;
+      border-radius: 0.3rem;
+    }
+    .hero kbd {
+      color: var(--cream);
+      background: #3d3832;
+    }
+
+    .cmp { display: grid; gap: 0.75rem; }
+    .cmp article h3 { margin-bottom: 0.7rem; }
+    .cmp-grid { display: grid; gap: 0.75rem; }
+    .who-hub { color: var(--forest); }
+    .who-pme { color: var(--rust-deep); }
+    .cmp p { margin: 0; }
+
+    /* Rails */
+    .rail { margin: 0; padding: 0; list-style: none; }
+    .rail li {
+      position: relative;
+      padding: 0 0 1.15rem 1.15rem;
+      border-left: 2px solid var(--line-strong);
+    }
+    .rail li:last-child { padding-bottom: 0; }
+    .rail li::before {
+      content: "";
+      position: absolute;
+      left: -0.45rem;
+      top: 0.28rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 2px solid var(--rust);
+    }
+    .rail h3 { font-size: 1.15rem; }
+    .pill {
+      display: inline-block;
+      margin-top: 0.35rem;
+      background: var(--ochre);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 0.15rem 0.6rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    /* Ledger */
+    .phase header { margin-bottom: 0.35rem; }
+    .phase .eyebrow {
+      margin: 0;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--rust-deep);
+    }
+    .line {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: baseline;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .line > div { min-width: 0; }
+    .line-name { margin: 0; font-weight: 700; }
+    .line-note { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.9375rem; }
+    .money {
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      text-align: right;
+      flex: 0 1 auto;
+      max-width: 46%;
+    }
+    .money .per { font-weight: 400; }
+    .band-total {
+      margin-top: 0.8rem;
+      background: var(--forest);
+      color: var(--cream);
+      border-radius: 0.7rem;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+    .band-total p { margin: 0; min-width: 0; }
+    .band-total strong { font-family: var(--serif); font-size: 1.25rem; font-weight: 640; }
+
+    .callout { background: #f7f1e4; }
+    .callout-strong {
+      background: #f8efe9;
+      border-color: #e4cfc4;
+    }
+    .callout h3 { margin-bottom: 0.35rem; }
+
+    /* Charts */
+    .chart { margin: 1.25rem 0 0; }
+    .chart-row { margin-top: 0.85rem; }
+    .chart-top, .scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .chart-top { font-weight: 700; }
+    .scale {
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    .track {
+      position: relative;
+      height: 0.85rem;
+      margin-top: 0.35rem;
+      background:
+        linear-gradient(to right, transparent 24.6%, var(--line-strong) 24.6%, var(--line-strong) calc(24.6% + 1px), transparent calc(24.6% + 1px)),
+        linear-gradient(to right, transparent 49.6%, var(--line-strong) 49.6%, var(--line-strong) calc(49.6% + 1px), transparent calc(49.6% + 1px)),
+        linear-gradient(to right, transparent 74.6%, var(--line-strong) 74.6%, var(--line-strong) calc(74.6% + 1px), transparent calc(74.6% + 1px)),
+        var(--track);
+      border-radius: 999px;
+    }
+    .track .fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border-radius: 999px;
+      background: var(--forest);
+    }
+    .track .fill.b { background: var(--clay); }
+    .track .fill.c {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--brown),
+        var(--brown) 4px,
+        #6d5a3d 4px,
+        #6d5a3d 8px
+      );
+    }
+    .track .mark {
+      position: absolute;
+      top: -0.28rem;
+      bottom: -0.28rem;
+      width: 2px;
+      background: var(--ink);
+    }
+    .chart-note { color: var(--muted); font-size: 0.9375rem; }
+
+    .legend { margin: 0.8rem 0 0; padding: 0; list-style: none; }
+    .legend li { display: flex; gap: 0.5rem; align-items: baseline; margin-top: 0.35rem; }
+    .swatch {
+      flex: 0 0 auto;
+      width: 0.85rem;
+      height: 0.85rem;
+      border-radius: 0.2rem;
+      margin-top: 0.28rem;
+    }
+    .swatch.c1 { background: var(--forest); }
+    .swatch.c2 { background: var(--clay); }
+    .swatch.c3 { background: var(--brown); }
+
+    .stack {
+      display: flex;
+      width: 100%;
+      min-height: 2.5rem;
+      border-radius: 0.6rem;
+      overflow: hidden;
+      color: #fff;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .stack span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.5rem;
+      padding: 0.35rem 0.15rem;
+    }
+    .stack .c1 { background: var(--forest); }
+    .stack .c2 { background: var(--clay); }
+    .stack .c3 { background: var(--brown); }
+    .stack-label { margin: 0.45rem 0 0.3rem; font-weight: 700; }
+
+    /* Sources */
+    .sources { padding-left: 1.25rem; }
+    .sources li { margin: 0.7rem 0; padding-left: 0.25rem; }
+    .sources a { overflow-wrap: anywhere; }
+    sup a { text-decoration: none; font-weight: 700; }
+    sup a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-block: 1.5rem 2.5rem;
+      color: var(--muted);
+      font-size: 0.9375rem;
+    }
+
+    @media (min-width: 720px) {
+      .facts { grid-template-columns: repeat(3, 1fr); }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .split { grid-template-columns: 1fr 1fr; align-items: start; }
+      .cmp-grid { grid-template-columns: 1fr 1fr; }
+      .phases { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (forced-colors: active) {
+      .nav-scroller a, .card, .panel, .phase, .ring { border: 1px solid CanvasText; }
+      a:focus-visible { outline: 3px solid CanvasText; }
+    }
+
+    @media print {
+      .nav-wrap, .skip { display: none; }
+      .hero { background: #fff; color: #000; }
+      .hero a:link, .facts strong, .kicker, .deck, .mast { color: #000; }
+      .facts li, .band-total, .ring-core { background: #fff; color: #000; border: 1px solid #000; }
+      a { text-decoration: underline; }
+      section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="hero">
+    <div class="wrap mast">
+      <strong>aus-property</strong>
+      <span>Study · 28 Oct 2026</span>
+    </div>
+    <div class="wrap hero-inner">
+      <p class="kicker">VIC Property Hub demo × PropertyME</p>
+      <h1>AU residential PM mini&#8209;SaaS — first&#8209;cut study</h1>
+      <p class="deck">A page to forward: where the <a href="https://vicpropertyhuberp.vercel.app/">VIC Property Hub</a> browser demo sits against <a href="https://www.propertyme.com/">PropertyME</a>, and what the servers might cost if the wedge became a product. Researched 28 October 2026. USD list prices unless marked AUD.</p>
+      <ul class="facts">
+        <li>
+          <span class="lbl">Demo</span>
+          <strong>Browser only</strong>
+          <span class="detail">localStorage <kbd>vph41</kbd>. No signup, no server.</span>
+        </li>
+        <li>
+          <span class="lbl">The buy</span>
+          <strong>Trust</strong>
+          <span class="detail">PropertyME weaves trust in. The demo does not.</span>
+        </li>
+        <li>
+          <span class="lbl">Paid floor</span>
+          <strong>US$45 / mo</strong>
+          <span class="detail">Vercel Pro US$20 + Supabase Pro US$25.</span>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <nav class="nav-wrap" aria-label="Sections">
+    <div class="wrap nav-scroller" data-nav>
+      <a href="#thesis">Thesis</a>
+      <a href="#pain">Pain map</a>
+      <a href="#demo">Demo</a>
+      <a href="#compare">Compare</a>
+      <a href="#costs">Costs</a>
+      <a href="#build">Build</a>
+      <a href="#caveats">Caveats</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section id="thesis" aria-labelledby="thesis-h">
+      <div class="wrap">
+        <h2 id="thesis-h"><span class="num">01</span>Thesis</h2>
+        <p class="lede">Three lines a principal can repeat. The rest of the page is the evidence.</p>
+        <ol class="bets">
+          <li>
+            <p><strong>Do not clone PropertyME.</strong> Their Manage PM page publishes 1.9M+ properties, 6,400+ agencies, and 2 out of 3 Australian investment properties. Trust accounting is the core of that product, described there as woven in rather than bolted on.<sup><a href="#fn-pme" id="fnref-pme">1</a></sup></p>
+          </li>
+          <li>
+            <p><strong>Trust is the buy.</strong> End-of-month money ops is the highest-liability job in the agency. A cleaner task list does not replace a trust ledger, an owner statement, or a disbursement run.</p>
+          </li>
+          <li>
+            <p><strong>The wedge is VIC-first, small rent rolls, or one workflow sharp enough that an agency keeps PropertyME and still pays for this.</strong></p>
+          </li>
+        </ol>
+
+        <h3 style="margin-top:1.75rem">Next bets, in this order</h3>
+        <ol class="bets">
+          <li><p><strong>Trust-lite.</strong> Receipt, then allocate, then owner payout and statement.</p></li>
+          <li><p><strong>VIC notice and compliance pack.</strong> A calendar that knows which check is due.</p></li>
+          <li><p><strong>Keep the portals and the maintenance approval</strong> already sketched in the demo.</p></li>
+          <li><p><strong>Leave the full ERP parked</strong> until bet 1 is real. Listings, a trades marketplace, and an inbox product wait with it.</p></li>
+        </ol>
+        <p>The sharp slice already in the demo is one property file: arrears, a bond note, inspection acknowledgement, and landlord approval on a job.</p>
+
+        <figure class="wedge" id="wedge">
+          <figcaption>Nested wedge. Sell the core. Leave the suite on the shelf.</figcaption>
+          <div class="ring ring-outer">
+            <p class="ring-label">Incumbent suite</p>
+            <p>Trust, CRM, inspections, trades, listings, compliance, portals, mobile. This is the PropertyME-shaped product. It already exists.</p>
+            <div class="ring ring-mid">
+              <p class="ring-label">Parked</p>
+              <p>Full ERP, listings-to-applications pipeline, trades portal, inbox AI.</p>
+              <div class="ring ring-core">
+                <p class="ring-label">Wedge</p>
+                <p>VIC-first. Small rolls. One sharp workflow.</p>
+              </div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section id="pain" aria-labelledby="pain-h">
+      <div class="wrap">
+        <h2 id="pain-h"><span class="num">02</span>Pain → function</h2>
+        <p class="lede">Why an agency pays, and the function that answers that pain. The order matches the bets above.</p>
+        <div class="cards">
+          <article class="card">
+            <h3>Trust and end of month</h3>
+            <p class="tag tag-pain">Pain · highest liability</p>
+            <p>Money ops: receipting, allocation, owner payment, the monthly grind. This is the job that can sink an agency.</p>
+            <p class="fn"><span class="tag tag-fn">Function · bet 1</span> Trust-lite. Receipt → allocate → owner payout and statement. Audit trail included, or it is not trust-lite.</p>
+          </article>
+          <article class="card">
+            <h3>Compliance and notices</h3>
+            <p class="tag tag-pain">Pain · law that moves</p>
+            <p>Victorian tenancy rules, notices, and safety checks. A wrong notice is a product defect, not a copy tweak.</p>
+            <p class="fn"><span class="tag tag-fn">Function · bet 2</span> VIC notice pack and a compliance calendar. Solicitor review before it ships as advice.</p>
+          </article>
+          <article class="card">
+            <h3>The inbox</h3>
+            <p class="tag tag-pain">Pain · owners, tenants, trades</p>
+            <p>MRI Software’s 2024 Voice of the Property Manager: 47% of property managers work more than 41 hours a week, and 54% report mental-health struggles.<sup><a href="#fn-mri" id="fnref-mri">2</a></sup></p>
+            <p class="fn"><span class="tag tag-fn">Function</span> Keep owner and tenant portals so routine status does not become another email. A full inbox product is parked.</p>
+          </article>
+          <article class="card">
+            <h3>Maintenance coordination</h3>
+            <p class="tag tag-pain">Pain · the job stalls</p>
+            <p>Tenant reports it, landlord has to approve it, someone has to do the work. The handoff is the product.</p>
+            <p class="fn"><span class="tag tag-fn">Function · bet 3</span> Landlord approve / reject on the job. Already sketched. The stored $500 threshold is not enforced yet. A trades portal waits.</p>
+          </article>
+          <article class="card">
+            <h3>Inspections and renewals</h3>
+            <p class="tag tag-pain">Pain · volume</p>
+            <p>Check-in, routine, check-out, then the renewal. Repeated on every tenancy.</p>
+            <p class="fn"><span class="tag tag-fn">Function</span> The demo already has the three inspection types plus acknowledge. Mobile polish is a short later step. Renewals wait.</p>
+          </article>
+          <article class="card">
+            <h3>Small-roll economics</h3>
+            <p class="tag tag-pain">Pain · the suite is priced for a bigger desk</p>
+            <p>PropertyME’s own page describes pricing as transparent.<sup><a href="#fn-pme">1</a></sup> Separately, this study records review-site themes (Capterra and similar): reports take too many clicks, advanced setup is hard, pricing feels harsh under about 20–50 doors, and updates sometimes jar. Those themes were not re-quoted for this page.<sup><a href="#fn-study" id="fnref-study">3</a></sup></p>
+            <p class="fn"><span class="tag tag-fn">Function</span> Scope and price the wedge for a small VIC roll. A discounted clone of the whole suite misses the opening.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" aria-labelledby="demo-h">
+      <div class="wrap">
+        <h2 id="demo-h"><span class="num">03</span>What the Hub demo has</h2>
+        <p class="lede">Honest inventory of <a href="https://vicpropertyhuberp.vercel.app/">vicpropertyhuberp.vercel.app</a> as studied on 28 October 2026. Sample Melbourne book, in AUD. Tags on the product: Property-centred, Task-focused, Audit-ready. This is not a production system.</p>
+
+        <ul class="meta-list">
+          <li><span class="lbl">Personas</span><span>Admin Ava. Agents, including Liam. Landlords Olivia and Mia. Tenants Noah, Amelia, and Leo.</span></li>
+          <li><span class="lbl">Modules</span><span>Dashboard, People, Properties (about 27), Work, Reports. Admin also has Administration and Audit.</span></li>
+          <li><span class="lbl">Storage</span><span>Browser only. Key <kbd>vph41</kbd>. No signup, no pricing page, no docs site.</span></li>
+          <li><span class="lbl">Scoping</span><span>Agent scoping works. Reports export CSV.</span></li>
+        </ul>
+
+        <h3 style="margin-top:1.5rem">Property file tabs</h3>
+        <ul class="chips" aria-label="Property workspace tabs">
+          <li>Overview (onboarding)</li>
+          <li>Finance</li>
+          <li>Lease</li>
+          <li>Inspections</li>
+          <li>Maintenance</li>
+          <li>Documents</li>
+          <li>Tasks</li>
+        </ul>
+
+        <div class="split" style="margin-top:1.25rem">
+          <article class="panel built">
+            <h3>In the demo</h3>
+            <ul>
+              <li>Finance: rent charges, payments, and reversals. A bond subledger. A bond note of $1,000 marked “Held by RTBA” (a note in sample data, not an RTBA lodgement).</li>
+              <li>Lease: dates, rent frequency, bond holder, status from Draft through Terminated.</li>
+              <li>Inspections: Check-in, Routine, Check-out, plus acknowledge.</li>
+              <li>Maintenance: priority Emergency, Urgent, or Routine. Landlord Approve or Reject. A $500 threshold is stored and not enforced.</li>
+              <li>Landlord portal: properties, approvals, arrears. Tenant: tenancy, payments, raise maintenance.</li>
+              <li>Document upload metadata. Seed files are not downloadable.</li>
+            </ul>
+          </article>
+          <article class="panel gap">
+            <h3>Gaps versus PropertyME</h3>
+            <ul>
+              <li>Trust accounting</li>
+              <li>Owner statements and disbursements</li>
+              <li>Bank feed</li>
+              <li>GST</li>
+              <li>RTBA lodgement</li>
+              <li>VIC notice packs</li>
+              <li>Compliance calendar</li>
+              <li>Listings → applications pipeline</li>
+              <li>Trades portal</li>
+              <li>Real email or SMS</li>
+              <li>Real auth, or any server</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="compare" aria-labelledby="compare-h">
+      <div class="wrap">
+        <h2 id="compare-h"><span class="num">04</span>Hub vs PropertyME</h2>
+        <p class="lede">Compact read. The PropertyME column follows the public home page and the Manage PM page.<sup><a href="#fn-pme">1</a></sup> Where this study names a gap and those pages use different words, the cell says so. GST, RTBA lodgement, and a packaged VIC notice set are in that second group.</p>
+
+        <div class="cmp">
+          <article>
+            <h3>Shape of the product</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> One browser workspace. About 27 sample properties. Persona picker. No accounts.</p>
+              <p><span class="who who-pme">PropertyME</span> Manage PM with Trust Accounting, plus Trustless payments, Grow CRM, and AiMe. Scale claims on the Manage PM page: 1.9M+ properties, 6,400+ agencies, 2 out of 3 Australian investment properties.</p>
+            </div>
+          </article>
+          <article>
+            <h3>Trust and money</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> Rent charges, payments, reversals, bond subledger, RTBA note. No trust ledger, owner statement, disbursement, bank feed, GST, or RTBA lodgement.</p>
+              <p><span class="who who-pme">PropertyME</span> Trust is described as native, not a bolt-on. The same page names daily bank feeds, two-way reconciliation, real-time owner statements, and bulk disbursements, plus MePay and Trustless payments. GST and RTBA lodgement are study gaps for the Hub; this page does not quote a PropertyME screen for those two.</p>
+            </div>
+          </article>
+          <article>
+            <h3>Inspections</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> Check-in, Routine, Check-out, and acknowledge.</p>
+              <p><span class="who who-pme">PropertyME</span> Paperless inspections, geo planning, and InspectMe for tenant-completed routine inspections.</p>
+            </div>
+          </article>
+          <article>
+            <h3>Maintenance</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> Priority, landlord approve/reject, $500 threshold stored and not enforced. No trades portal.</p>
+              <p><span class="who who-pme">PropertyME</span> Jobs: quotes, assign trades, photos, owner and tenant updates.</p>
+            </div>
+          </article>
+          <article>
+            <h3>Portals</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> Landlord sees properties, approvals, arrears. Tenant sees tenancy, payments, and can raise maintenance. No app claimed.</p>
+              <p><span class="who who-pme">PropertyME</span> Owner access, tenant access, and the PropertyMe app.</p>
+            </div>
+          </article>
+          <article>
+            <h3>Lease, compliance, pipeline</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> Lease fields and status. No VIC notice pack, no compliance calendar, no listings pipeline.</p>
+              <p><span class="who who-pme">PropertyME</span> Lease renewals. AiMe Comply for state legislation. Compliance tracking for smoke alarms, pools, and insurance. Grow CRM. Listings through to realestate.com.au and other sites. The page also mentions notice automation. A Victorian notice pack under that name is a Hub gap in this study, not a PropertyME product name quoted here.</p>
+            </div>
+          </article>
+          <article>
+            <h3>Messages, files, AI, auth</h3>
+            <div class="cmp-grid">
+              <p><span class="who who-hub">Hub demo</span> No real email or SMS. Document metadata only. Reports and CSV. No AI module. No server auth.</p>
+              <p><span class="who who-pme">PropertyME</span> SMS and inbound SMS, chat, activity feed. Documents and key tracking. Dashboard and insights. AiMe reply, AiMe Comply, Bills AI. Cloud product with agency accounts. This study did not review their auth implementation.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="costs" aria-labelledby="costs-h">
+      <div class="wrap">
+        <h2 id="costs-h"><span class="num">05</span>What the servers might cost</h2>
+        <aside class="callout callout-strong">
+          <h3>Read this before the numbers</h3>
+          <p>USD list estimates, researched 28 October 2026. Vendors change rates, add tax, and bill overages. These bands are not invoices, not a quote, and not advice. Confirm each figure on the linked pricing page before spending. The dollar bands below are infrastructure. People, legal review, migration, and support sit outside them.</p>
+        </aside>
+
+        <h3 style="margin-top:1.5rem">Suggested stack</h3>
+        <p class="lede">A shape for a first commercial pilot. Swap a box if you already have a reason. Clerk is optional and is not inside the US$45 floor.</p>
+        <ol class="rail">
+          <li>
+            <h3>Front end on Vercel</h3>
+            <p>Next.js, or something in that family.<sup><a href="#fn-vercel" id="fnref-vercel">4</a></sup></p>
+          </li>
+          <li>
+            <h3>Supabase for data</h3>
+            <p>Postgres, Auth, and Storage. The other path is Clerk in front of Supabase.<sup><a href="#fn-supabase" id="fnref-supabase">5</a></sup> <sup><a href="#fn-clerk" id="fnref-clerk">6</a></sup></p>
+          </li>
+          <li>
+            <h3>Resend for email</h3>
+            <p>Transactional mail first. Marketing mail is a different plan.<sup><a href="#fn-resend" id="fnref-resend">7</a></sup></p>
+          </li>
+          <li>
+            <h3>Twilio, later, for SMS in Australia</h3>
+            <p>Leave it off until a workflow truly needs a text.<sup><a href="#fn-twilio" id="fnref-twilio">8</a></sup></p>
+          </li>
+          <li>
+            <h3>Cloudflare R2 when PDFs pile up</h3>
+            <p>Egress is free, which matters once owner statements are real files.<sup><a href="#fn-r2" id="fnref-r2">9</a></sup></p>
+          </li>
+          <li>
+            <h3>Sentry for errors</h3>
+            <p>Developer plan while it is still a pilot.<sup><a href="#fn-sentry" id="fnref-sentry">10</a></sup></p>
+          </li>
+          <li>
+            <h3>A .com.au name</h3>
+            <p>Study ballpark about AUD $10–15 a year. Not a registrar quote.<sup><a href="#fn-study">3</a></sup></p>
+          </li>
+        </ol>
+
+        <div class="phases" style="margin-top:1.5rem">
+          <article class="phase">
+            <header>
+              <p class="eyebrow">Phase A</p>
+              <h3>Prototype, 0–5 pilot agencies</h3>
+            </header>
+            <p>Hobby and free tiers are real, and they are the wrong place to hold someone else’s rent roll.</p>
+            <div class="line">
+              <div>
+                <p class="line-name"><a href="https://vercel.com/pricing">Vercel</a> Hobby</p>
+                <p class="line-note">US$0. Personal, non-commercial. Use Pro once an agency is on it.</p>
+              </div>
+              <p class="money">$0</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name"><a href="https://supabase.com/pricing">Supabase</a> Free</p>
+                <p class="line-note">US$0. Pauses after inactivity (the pricing page says one week). Not for a real pilot.</p>
+              </div>
+              <p class="money">$0</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Vercel Pro</p>
+                <p class="line-note">US$20 platform fee, 1 deploying seat included.</p>
+              </div>
+              <p class="money">$20</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Supabase Pro</p>
+                <p class="line-note">From US$25 / month.</p>
+              </div>
+              <p class="money">$25</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Paid floor</p>
+                <p class="line-note">US$20 + US$25. Stated sum for a real pilot.</p>
+              </div>
+              <p class="money">$45</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name"><a href="https://resend.com/pricing">Resend</a></p>
+                <p class="line-note">Free 3,000 emails / month, or Pro US$20 for 50,000. Free plan is also capped at 100 emails / day.</p>
+              </div>
+              <p class="money">$0–20</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name"><a href="https://sentry.io/pricing/">Sentry</a> Developer</p>
+                <p class="line-note">Free.</p>
+              </div>
+              <p class="money">$0</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name"><a href="https://clerk.com/pricing">Clerk</a></p>
+                <p class="line-note">Study snapshot: free to 10,000 MAU. Optional, and outside the US$45 floor. The pricing page counts users differently — see sources.</p>
+              </div>
+              <p class="money">$0</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name"><a href="https://developers.cloudflare.com/r2/pricing/">Cloudflare R2</a></p>
+                <p class="line-note">Free tier 10 GB-month. Egress free.</p>
+              </div>
+              <p class="money">$0</p>
+            </div>
+            <div class="band-total">
+              <p>Study band for a realistic pilot</p>
+              <strong>~$45–80</strong>
+            </div>
+            <p class="line-note">The study states ~US$45–80. It does not itemise the gap between the US$45 floor and the top of the band. Resend Pro at US$20 is the priced add-on already listed above.</p>
+          </article>
+
+          <article class="phase">
+            <header>
+              <p class="eyebrow">Phase B</p>
+              <h3>Early commercial, ~50–200 doors</h3>
+            </header>
+            <p>A few agencies. SMS still mostly off. The band is the run-rate before SMS volume and overages.</p>
+            <div class="line">
+              <div>
+                <p class="line-name">Vercel Pro</p>
+                <p class="line-note">US$20 for 1 seat. Each extra person who can deploy is +US$20.</p>
+              </div>
+              <p class="money">$20</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Supabase Pro</p>
+                <p class="line-note">US$25, plus compute if the Micro instance is no longer enough. Pro includes US$10 / month of compute credit, which the pricing page says covers one Micro instance.</p>
+              </div>
+              <p class="money">$25</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Resend Pro</p>
+                <p class="line-note">US$20 for 50,000 emails / month.</p>
+              </div>
+              <p class="money">$20</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Sentry Team</p>
+                <p class="line-note">About US$26 / month on the published Team card.</p>
+              </div>
+              <p class="money">~$26</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Twilio AU, when SMS is live</p>
+                <p class="line-note">About US$0.0515 per outbound segment, plus about US$8.25 / month for a mobile number. Carrier fees can apply. Per-message volume is extra and is outside the band below.</p>
+              </div>
+              <p class="money">$0.0515<span class="per"> / seg</span><br>+ $8.25</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Domain, backups, misc</p>
+                <p class="line-note">About US$5–15 / month in the study. The .com.au registration itself is the yearly AUD ballpark above, not this whole line.</p>
+              </div>
+              <p class="money">~$5–15</p>
+            </div>
+            <div class="band-total">
+              <p>Study band, before SMS volume</p>
+              <strong>~$80–150</strong>
+            </div>
+            <p class="line-note">Adding the listed monthly lines (Vercel US$20 + Supabase US$25 + Resend US$20 + Sentry ~US$26 + Twilio number US$8.25 + misc US$5–15) lands around US$104–114, before a second deploy seat and before per-segment SMS. That addition is arithmetic on the lines above, not a second estimate. A launch month in the study can jump toward ~US$120+ on transfer overages, which still sits in this kind of month.</p>
+          </article>
+
+          <article class="phase">
+            <header>
+              <p class="eyebrow">Phase C</p>
+              <h3>Growing, ~500–2,000 doors</h3>
+            </header>
+            <p>The bill starts to follow behaviour: how many texts, how many PDFs, how many seats.</p>
+            <div class="line">
+              <div>
+                <p class="line-name">Supabase compute</p>
+                <p class="line-note">Small about US$15 and Medium about US$60 on the compute table. That is the compute line, not the whole invoice. Plan fee and the US$10 credit still apply. See the pricing page before you add them in your head.</p>
+              </div>
+              <p class="money">$15–60</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">What else grows</p>
+                <p class="line-note">Seats, email volume, SMS volume, storage, egress.</p>
+              </div>
+              <p class="money">varies</p>
+            </div>
+            <div class="line">
+              <div>
+                <p class="line-name">Document egress</p>
+                <p class="line-note">Supabase uncached egress is US$0.09 / GB after 250 GB. Cache statements and notices on R2 or another CDN. R2’s egress fee is zero.</p>
+              </div>
+              <p class="money">$0.09 / GB</p>
+            </div>
+            <div class="band-total">
+              <p>Study band, rough</p>
+              <strong>~$200–600+</strong>
+            </div>
+            <p class="line-note">The top is open. SMS volume and document egress are why.</p>
+          </article>
+        </div>
+
+        <figure class="chart">
+          <figcaption>Monthly infrastructure on one scale, 0 to US$600. Phase C is open at the top, so its bar runs to the edge.</figcaption>
+          <div class="scale" aria-hidden="true"><span>0</span><span>150</span><span>300</span><span>450</span><span>600</span></div>
+          <div class="chart-row">
+            <div class="chart-top"><span>A · Pilot</span><span>US$45–80</span></div>
+            <div class="track" aria-hidden="true"><span class="fill" style="left:7.5%;width:5.833%"></span></div>
+          </div>
+          <div class="chart-row">
+            <div class="chart-top"><span>B · Early</span><span>US$80–150</span></div>
+            <div class="track" aria-hidden="true">
+              <span class="fill b" style="left:13.333%;width:11.667%"></span>
+              <span class="mark" style="left:20%"></span>
+            </div>
+          </div>
+          <div class="chart-row">
+            <div class="chart-top"><span>C · Growing</span><span>US$200–600+</span></div>
+            <div class="track" aria-hidden="true"><span class="fill c" style="left:33.333%;width:66.667%"></span></div>
+          </div>
+          <p class="chart-note">The black tick on phase B marks an example launch month near US$120, inside the US$80–150 band. Phase A is small on this scale on purpose: the pilot server bill is the cheap part.</p>
+        </figure>
+
+        <figure class="chart">
+          <figcaption>Same A and B bands, zoomed to US$160, so the pilot range is readable.</figcaption>
+          <div class="scale" aria-hidden="true"><span>$0</span><span>$40</span><span>$80</span><span>$120</span><span>$160</span></div>
+          <div class="chart-row">
+            <div class="chart-top"><span>A · Pilot</span><span>US$45–80</span></div>
+            <div class="track" aria-hidden="true"><span class="fill" style="left:28.125%;width:21.875%"></span></div>
+          </div>
+          <div class="chart-row">
+            <div class="chart-top"><span>B · Early</span><span>US$80–150</span></div>
+            <div class="track" aria-hidden="true">
+              <span class="fill b" style="left:50%;width:43.75%"></span>
+              <span class="mark" style="left:75%"></span>
+            </div>
+          </div>
+          <p class="chart-note">Tick again at about US$120. Phase C does not fit this zoom.</p>
+        </figure>
+
+        <h3 style="margin-top:1.75rem">What those bands leave out</h3>
+        <ul>
+          <li>Build labour (next section).</li>
+          <li>A solicitor and an accountant for anything called trust accounting, GST, or a Victorian notice.</li>
+          <li>Moving a rent roll off spreadsheets or off PropertyME.</li>
+          <li>Support time for working property managers.</li>
+          <li>SMS segments, Vercel on-demand usage past the included credit, and Supabase past the included quotas.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="build" aria-labelledby="build-h">
+      <div class="wrap">
+        <h2 id="build-h"><span class="num">06</span>Build time</h2>
+        <p class="lede">Order-of-magnitude ranges from the study, not a schedule and not a quote. Assumption: one strong full-stack developer, plus a property-management advisor part-time. Founder-built, the cash outlay until the first paying customer is the infrastructure above.</p>
+
+        <ol class="rail">
+          <li>
+            <h3>Trust-lite MVP</h3>
+            <p>Auth, multi-tenant, the property file, receipt and allocate, an owner-statement PDF, portals.</p>
+            <span class="pill">8–14 weeks</span>
+          </li>
+          <li>
+            <h3>VIC notices and compliance calendar</h3>
+            <p>On top of trust-lite. Wording reviewed before it is treated as correct.</p>
+            <span class="pill">+4–8 weeks</span>
+          </li>
+          <li>
+            <h3>Inspection polish and maintenance approval</h3>
+            <p>Partly in the demo already. Mobile polish, and make the approval threshold real if you keep it.</p>
+            <span class="pill">+2–4 weeks</span>
+          </li>
+        </ol>
+
+        <figure class="chart">
+          <figcaption>Sequential sum of those ranges. 14 weeks adds the low ends (8+4+2). 26 weeks adds the high ends (14+8+4). Overlap in real life would shrink the calendar. The study does not promise either number.</figcaption>
+          <p class="stack-label">Low ends in sequence · 14 weeks</p>
+          <div class="stack" aria-hidden="true">
+            <span class="c1" style="flex:8">8</span>
+            <span class="c2" style="flex:4">4</span>
+            <span class="c3" style="flex:2">2</span>
+          </div>
+          <p class="stack-label">High ends in sequence · 26 weeks</p>
+          <div class="stack" aria-hidden="true">
+            <span class="c1" style="flex:14">14</span>
+            <span class="c2" style="flex:8">8</span>
+            <span class="c3" style="flex:4">4</span>
+          </div>
+          <ul class="legend">
+            <li><span class="swatch c1" aria-hidden="true"></span> Trust-lite, 8–14 weeks</li>
+            <li><span class="swatch c2" aria-hidden="true"></span> VIC notices and calendar, +4–8 weeks</li>
+            <li><span class="swatch c3" aria-hidden="true"></span> Inspection polish and maintenance approval, +2–4 weeks</li>
+          </ul>
+        </figure>
+
+        <aside class="callout" style="margin-top:1.25rem">
+          <h3>People, in AUD, as a wide band</h3>
+          <p>A senior full-stack contractor in Australia often lands around <strong>AUD $800–1,500+ a day</strong>. It varies wildly. Show the band. Do not turn it into a fake quote. Legal review of trust claims is a separate budget, and it is the one to refuse to skip.</p>
+        </aside>
+
+        <h3 style="margin-top:1.75rem">Full ERP stays parked</h3>
+        <p>Bet 4 from the thesis: listings, a trades marketplace, CRM, and a full inbox wait until trust-lite is real. The demo’s property file is the seed. It is not the suite.</p>
+      </div>
+    </section>
+
+    <section id="caveats" aria-labelledby="caveats-h">
+      <div class="wrap">
+        <h2 id="caveats-h"><span class="num">07</span>Caveats</h2>
+        <h3>What will hurt if it is waved through</h3>
+        <ul>
+          <li><strong>Trust correctness and the audit trail</strong> are the product risk. The screens are the smaller part.</li>
+          <li><strong>Victorian notice wording</strong> has to be right. A plausible template is a liability.</li>
+          <li><strong>Migration is a sales cost.</strong> Moving off spreadsheets, or off PropertyME, takes people’s trust. PropertyME sells that switch (the Manage PM page describes MigrateMe). Budget the same seriousness in the other direction.</li>
+          <li><strong>Support load.</strong> The MRI hours and strain figures are both the reason to build and the warning about who will call.</li>
+        </ul>
+
+        <aside class="callout callout-strong" style="margin-top:1.25rem">
+          <h3>Disclaimer</h3>
+          <p>This page is a study for a conversation. It is not legal advice, financial advice, tax advice, or a trust-accounting opinion. Trust accounting, owner disbursements, GST, and Victorian notices need a solicitor and an accountant before anyone offers them. Do not call the product “trust accounting” until that review exists.</p>
+          <p>The <a href="https://vicpropertyhuberp.vercel.app/">VIC Property Hub</a> link is a browser demo. It is not a production SaaS. It does not take signups and it does not hold a real trust account.</p>
+          <p>Prices are list estimates gathered on 28 October 2026. They will move. Phase bands (~US$45–80, ~US$80–150, ~US$200–600+) are the study’s roll-ups. The worked addition in Phase B is arithmetic on listed lines, labelled as such. Contractor day rates are a market ballpark. Build weeks assume the staffing above and will move when a real scope is written.</p>
+        </aside>
+
+        <h3 id="sources" style="margin-top:1.75rem">Sources</h3>
+        <p>Checked against the pages below while this file was written, on the same date as the study. If a live price differs, the live page wins and this study is stale.</p>
+        <ol class="sources">
+          <li id="fn-pme">PropertyME home, <a href="https://www.propertyme.com/">propertyme.com</a>, and Manage PM, <a href="https://www.propertyme.com/manage-pm">propertyme.com/manage-pm</a>. Scale figures (1.9M+ properties, 6,400+ agencies, 2 out of 3 Australian investment properties), trust-as-native wording, feature names used in the comparison, bank feeds, owner statements, bulk disbursements, and MigrateMe. <a href="#fnref-pme">Back</a></li>
+          <li id="fn-mri">MRI Software, “Innovation and focus on workplace culture drive the future of property management”, reporting Voice of the Property Manager 2024 key findings: 47% work more than 41 hours a week, and 54% report mental-health struggles. <a href="https://www.mrisoftware.com/au/news/innovation-and-focus-on-workplace-culture-drive-the-future-of-property-management/">mrisoftware.com/au/news/…</a>. <a href="#fnref-mri">Back</a></li>
+          <li id="fn-study">Study notes, 28 October 2026, for figures that are not a vendor’s published price: the phase roll-ups (~US$45–80, ~US$80–150, ~US$200–600+), the ~US$120 launch-month example, build-week ranges, the AUD $800–1,500+ / day contractor ballpark, the AUD $10–15 / year domain ballpark, the ~US$5–15 monthly misc line, and the review-site themes (too many clicks for reports, hard advanced configuration and onboarding, pricing harsh under about 20–50 doors, occasional update friction). Review themes were not re-scraped for this HTML file. <a href="#fnref-study">Back</a></li>
+          <li id="fn-vercel">Vercel pricing, <a href="https://vercel.com/pricing">vercel.com/pricing</a>. Hobby US$0 for personal, non-commercial use. Pro US$20 / month. Seat and credit detail: <a href="https://vercel.com/docs/plans/pro-plan">Pro plan docs</a> — 1 deploying seat included, additional paid seats US$20 / month, US$20 monthly usage credit. Prices exclude GST and similar taxes. <a href="#fnref-vercel">Back</a></li>
+          <li id="fn-supabase">Supabase pricing, <a href="https://supabase.com/pricing">supabase.com/pricing</a>. Free projects pause after a week of inactivity. Pro from US$25 / month, with US$10 compute credit that covers one Micro instance. Egress 250 GB, then US$0.09 / GB uncached. Compute table: Small about US$15 / month, Medium about US$60 / month. <a href="#fnref-supabase">Back</a></li>
+          <li id="fn-clerk">Clerk pricing, <a href="https://clerk.com/pricing">clerk.com/pricing</a>. This study’s cost snapshot says free to 10,000 MAU. A check of that page on 28 October 2026 showed a free Hobby plan described as 50,000 monthly retained users per app. Clerk says it bills retained users, not MAU. Clerk is optional beside Supabase Auth and is outside the dollar bands. <a href="#fnref-clerk">Back</a></li>
+          <li id="fn-resend">Resend pricing, <a href="https://resend.com/pricing">resend.com/pricing</a>. Free 3,000 emails / month (100 / day). Pro US$20 / month for 50,000 emails. <a href="#fnref-resend">Back</a></li>
+          <li id="fn-twilio">Twilio SMS pricing for Australia, <a href="https://www.twilio.com/en-us/sms/pricing/au">twilio.com/en-us/sms/pricing/au</a>. Outbound US$0.0515 per segment. Mobile number US$8.25 / month. The page has described pricing as current as of October 2026, and says prices and carrier fees can change. <a href="#fnref-twilio">Back</a></li>
+          <li id="fn-r2">Cloudflare R2 pricing, <a href="https://developers.cloudflare.com/r2/pricing/">developers.cloudflare.com/r2/pricing</a>. Free tier 10 GB-month. Egress to the internet is free. <a href="#fnref-r2">Back</a></li>
+          <li id="fn-sentry">Sentry pricing, <a href="https://sentry.io/pricing/">sentry.io/pricing</a>. Developer plan free. Team plan shown at US$26 / month. <a href="#fnref-sentry">Back</a></li>
+          <li id="fn-hub">VIC Property Hub demo, <a href="https://vicpropertyhuberp.vercel.app/">vicpropertyhuberp.vercel.app</a>. Behaviour described in this study as of 28 October 2026. Browser demo only.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>aus-property · static study page · no tracker, no account, no build step. Assembled 28 October 2026. <a href="#thesis">Back to the thesis</a>.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var scroller = document.querySelector("[data-nav]");
+      if (!scroller || !("IntersectionObserver" in window)) return;
+      var links = Array.prototype.slice.call(scroller.querySelectorAll("a[href^='#']"));
+      var sections = links.map(function (link) {
+        return document.querySelector(link.getAttribute("href"));
+      }).filter(Boolean);
+
+      function setCurrent(id) {
+        var active = null;
+        links.forEach(function (link) {
+          var on = link.getAttribute("href") === "#" + id;
+          if (on) {
+            link.setAttribute("aria-current", "true");
+            active = link;
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+        if (!active) return;
+        var cRect = active.getBoundingClientRect();
+        var sRect = scroller.getBoundingClientRect();
+        if (cRect.left < sRect.left + 8 || cRect.right > sRect.right - 8) {
+          var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var left = active.offsetLeft - (scroller.clientWidth - active.clientWidth) / 2;
+          scroller.scrollTo({ left: Math.max(0, left), behavior: reduce ? "auto" : "smooth" });
+        }
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) setCurrent(entry.target.id);
+        });
+      }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
+
+      sections.forEach(function (section) { observer.observe(section); });
+    })();
+  </script>
+</body>
+</html>
