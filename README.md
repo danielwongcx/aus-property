@@ -8,14 +8,12 @@ The Hub link is a **browser demo** (`localStorage` key `vph41`). It is not a pro
 
 ## Read the page
 
-- On GitHub Pages, once enabled: [https://danielwongcx.github.io/aus-property/](https://danielwongcx.github.io/aus-property/)
+- On GitHub Pages: [https://danielwongcx.github.io/aus-property/](https://danielwongcx.github.io/aus-property/)
 - On your machine: open `index.html`, or from this folder run `python3 -m http.server` and visit `http://127.0.0.1:8000`
 
-## Turn on GitHub Pages
+Pages is already set to deploy branch `main`, folder **`/ (root)`**. This `index.html` appears at that URL after it is merged to `main`. There is no build step and no GitHub Action. `.nojekyll` is included so Pages serves the HTML as a static file.
 
-In the repo: **Settings → Pages → Build and deployment → Deploy from a branch**. Choose branch `main` and folder **`/ (root)`**. Save.
-
-There is no build step and no GitHub Action. `.nojekyll` is included so Pages serves `index.html` as a static file.
+If Pages is ever turned off: **Settings → Pages → Deploy from a branch**, branch `main`, folder `/ (root)`.
 
 ## What is on the page
 
