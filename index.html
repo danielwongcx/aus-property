@@ -820,6 +820,33 @@
       .bet-jump a { flex: 1 1 auto; }
     }
 
+    /* Narrow folds: one panel at a time. Wide layout keeps every panel. */
+    .fold-tabs { display: none; }
+    .fold-tabs button,
+    [data-fold-panel] { scroll-margin-top: calc(var(--nav-h) + 0.75rem); }
+    @media (max-width: 719px) {
+      .js .fold-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+        max-width: 100%;
+        margin: 0.85rem 0 0.75rem;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+      }
+      .js .fold-tabs button {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        white-space: nowrap;
+      }
+      .js [data-fold] [data-fold-panel]:not(.is-on) { display: none; }
+      .js [data-fold] .bet-stack,
+      .js [data-fold] .phases { margin-top: 0 !important; }
+    }
+
     /* One-shot study motion. html.motion is set only when motion is allowed.
        Final state is the authored layout; .is-in plays it once. */
     html.motion #thesis .wrap > ol.bets:first-of-type > li,
@@ -949,7 +976,8 @@
       .tl-panel[hidden] { display: block !important; }
       .js .matrix-panels article + article,
       .tl-panels .tl-panel + .tl-panel { margin-top: 0.75rem; }
-      .js-only { display: none !important; }
+      .js-only, .fold-tabs { display: none !important; }
+      .js [data-fold] [data-fold-panel] { display: block !important; }
       html.motion #thesis .wrap > ol.bets:first-of-type > li,
       html.motion #saas-bets article.bet,
       html.motion #pain .cards > .card,
@@ -1060,43 +1088,53 @@
       <div class="wrap">
         <h2 id="pain-h"><span class="num">02</span>Pain → function</h2>
         <p class="lede">Why an agency pays, and the function that answers that pain. The order matches the three bets in the next section.</p>
-        <div class="cards">
-          <article class="card">
+        <div data-fold>
+          <div class="tablist fold-tabs" role="tablist" aria-label="Pain and function" data-fold-tabs>
+            <button type="button" role="tab" id="tab-pain-trust" aria-selected="true" aria-controls="pain-trust">Trust</button>
+            <button type="button" role="tab" id="tab-pain-notice" aria-selected="false" tabindex="-1" aria-controls="pain-notice">Notices</button>
+            <button type="button" role="tab" id="tab-pain-inbox" aria-selected="false" tabindex="-1" aria-controls="pain-inbox">Inbox</button>
+            <button type="button" role="tab" id="tab-pain-maint" aria-selected="false" tabindex="-1" aria-controls="pain-maint">Maintenance</button>
+            <button type="button" role="tab" id="tab-pain-inspect" aria-selected="false" tabindex="-1" aria-controls="pain-inspect">Inspections</button>
+            <button type="button" role="tab" id="tab-pain-small" aria-selected="false" tabindex="-1" aria-controls="pain-small">Small-roll</button>
+          </div>
+          <div class="cards" data-fold-panels>
+          <article class="card is-on" id="pain-trust" data-fold-panel role="tabpanel" aria-labelledby="tab-pain-trust">
             <h3>Trust and end of month</h3>
             <p class="tag tag-pain">Pain · highest liability</p>
             <p>Money ops: receipting, allocation, owner payment, the monthly grind. This is the job that can sink an agency.</p>
             <p class="fn"><span class="tag tag-fn">Function · bet 1</span> Trust-lite. Receipt → allocate → owner payout and statement. Audit trail included, or it is not trust-lite.</p>
           </article>
-          <article class="card">
+          <article class="card" id="pain-notice" data-fold-panel role="tabpanel" aria-labelledby="tab-pain-notice">
             <h3>Compliance and notices</h3>
             <p class="tag tag-pain">Pain · law that moves</p>
             <p>Victorian tenancy rules, notices, and safety checks. A wrong notice is a product defect, not a copy tweak.</p>
             <p class="fn"><span class="tag tag-fn">Function · bet 2</span> VIC notice pack and a compliance calendar. Solicitor review before it ships as advice.</p>
           </article>
-          <article class="card">
+          <article class="card" id="pain-inbox" data-fold-panel role="tabpanel" aria-labelledby="tab-pain-inbox">
             <h3>The inbox</h3>
             <p class="tag tag-pain">Pain · owners, tenants, trades</p>
             <p>MRI Software’s 2024 Voice of the Property Manager: 47% of property managers work more than 41 hours a week, and 54% report mental-health struggles.<sup><a href="#fn-mri" id="fnref-mri">2</a></sup></p>
             <p class="fn"><span class="tag tag-fn">Function</span> Keep owner and tenant portals so routine status does not become another email. A full inbox product is parked.</p>
           </article>
-          <article class="card">
+          <article class="card" id="pain-maint" data-fold-panel role="tabpanel" aria-labelledby="tab-pain-maint">
             <h3>Maintenance coordination</h3>
             <p class="tag tag-pain">Pain · the job stalls</p>
             <p>Tenant reports it, landlord has to approve it, someone has to do the work. The handoff is the product.</p>
             <p class="fn"><span class="tag tag-fn">Function · bet 3</span> Landlord approve / reject on the job. Already sketched. The stored $500 threshold is not enforced yet. A trades portal waits.</p>
           </article>
-          <article class="card">
+          <article class="card" id="pain-inspect" data-fold-panel role="tabpanel" aria-labelledby="tab-pain-inspect">
             <h3>Inspections and renewals</h3>
             <p class="tag tag-pain">Pain · volume</p>
             <p>Check-in, routine, check-out, then the renewal. Repeated on every tenancy.</p>
             <p class="fn"><span class="tag tag-fn">Function</span> The demo already has the three inspection types plus acknowledge. Mobile polish is a short later step. Renewals wait.</p>
           </article>
-          <article class="card">
+          <article class="card" id="pain-small" data-fold-panel role="tabpanel" aria-labelledby="tab-pain-small">
             <h3>Small-roll economics</h3>
             <p class="tag tag-pain">Pain · the suite is priced for a bigger desk</p>
             <p>PropertyME’s own page describes pricing as transparent.<sup><a href="#fn-pme">1</a></sup> Separately, this study records review-site themes (Capterra and similar): reports take too many clicks, advanced setup is hard, pricing feels harsh under about 20–50 doors, and updates sometimes jar. Those themes were not re-quoted for this page.<sup><a href="#fn-study" id="fnref-study">3</a></sup></p>
             <p class="fn"><span class="tag tag-fn">Function</span> Scope and price the wedge for a small VIC roll. A discounted clone of the whole suite misses the opening.</p>
           </article>
+          </div>
         </div>
       </div>
     </section>
@@ -1225,8 +1263,14 @@
 
         <h3 class="subhead">The three bets</h3>
         <p>Each card is the plan for that bet: the pain, what PropertyME already does, the gap, what we would ship, then the action plan, the roadmap, and the cost.</p>
-        <div class="bet-stack">
-          <article class="panel bet" id="bet-trust" data-bet="1">
+        <div data-fold>
+          <div class="tablist fold-tabs" role="tablist" aria-label="Three mini-SaaS bets" data-fold-tabs>
+            <button type="button" role="tab" id="tab-plan-1" aria-selected="true" aria-controls="bet-trust">1 · Trust-lite</button>
+            <button type="button" role="tab" id="tab-plan-2" aria-selected="false" tabindex="-1" aria-controls="bet-vic">2 · VIC notices</button>
+            <button type="button" role="tab" id="tab-plan-3" aria-selected="false" tabindex="-1" aria-controls="bet-maint">3 · Approval</button>
+          </div>
+          <div class="bet-stack" data-fold-panels>
+          <article class="panel bet is-on" id="bet-trust" data-bet="1" data-fold-panel role="tabpanel" aria-labelledby="tab-plan-1">
             <p class="match-note" data-match-note hidden></p>
             <p class="badge">Priority 1</p>
             <h3>Trust-lite money ops</h3>
@@ -1256,7 +1300,7 @@
             </dl>
           </article>
 
-          <article class="panel bet" id="bet-vic" data-bet="2">
+          <article class="panel bet" id="bet-vic" data-bet="2" data-fold-panel role="tabpanel" aria-labelledby="tab-plan-2">
             <p class="match-note" data-match-note hidden></p>
             <p class="badge">Priority 2</p>
             <h3>VIC notice and compliance calendar</h3>
@@ -1286,7 +1330,7 @@
             </dl>
           </article>
 
-          <article class="panel bet" id="bet-maint" data-bet="3">
+          <article class="panel bet" id="bet-maint" data-bet="3" data-fold-panel role="tabpanel" aria-labelledby="tab-plan-3">
             <p class="match-note" data-match-note hidden></p>
             <p class="badge">Priority 3</p>
             <h3>Maintenance approval handoff</h3>
@@ -1315,6 +1359,7 @@
               <dd>Small incremental build: +2–4 weeks, on the same staffing assumption as <a href="#build">Build time</a>. Infra stays on the shared Phase A / B / C bands. SMS, when live: about US$0.0515 per outbound segment and about US$8.25 / month for a number.<sup><a href="#fn-twilio">8</a></sup> Per-message volume sits outside the monthly band.</dd>
             </dl>
           </article>
+          </div>
         </div>
 
         <h3 class="subhead" id="roadmap-h">Roadmap</h3>
@@ -1615,8 +1660,14 @@
           </li>
         </ol>
 
-        <div class="phases" style="margin-top:1.5rem">
-          <article class="phase">
+        <div data-fold>
+          <div class="tablist fold-tabs" role="tablist" aria-label="Infrastructure phases" data-fold-tabs>
+            <button type="button" role="tab" id="tab-phase-a" aria-selected="true" aria-controls="phase-a">A · Pilot</button>
+            <button type="button" role="tab" id="tab-phase-b" aria-selected="false" tabindex="-1" aria-controls="phase-b">B · Early</button>
+            <button type="button" role="tab" id="tab-phase-c" aria-selected="false" tabindex="-1" aria-controls="phase-c">C · Growing</button>
+          </div>
+          <div class="phases" style="margin-top:1.5rem" data-fold-panels>
+          <article class="phase is-on" id="phase-a" data-fold-panel role="tabpanel" aria-labelledby="tab-phase-a">
             <header>
               <p class="eyebrow">Phase A</p>
               <h3>Prototype, 0–5 pilot agencies</h3>
@@ -1692,9 +1743,7 @@
             <p class="line-note">The study states ~US$45–80. It does not itemise the gap between the US$45 floor and the top of the band. Resend Pro at US$20 is the priced add-on already listed above.</p>
           </article>
 
-          <article class="phase">
-            <header>
-              <p class="eyebrow">Phase B</p>
+          <article class="phase" id="phase-b" data-fold-panel role="tabpanel" aria-labelledby="tab-phase-b">
               <h3>Early commercial, ~50–200 doors</h3>
             </header>
             <p>A few agencies. SMS still mostly off. The band is the run-rate before SMS volume and overages.</p>
@@ -1747,9 +1796,7 @@
             <p class="line-note">Adding the listed monthly lines (Vercel US$20 + Supabase US$25 + Resend US$20 + Sentry ~US$26 + Twilio number US$8.25 + misc US$5–15) lands around US$104–114, before a second deploy seat and before per-segment SMS. That addition is arithmetic on the lines above, not a second estimate. A launch month in the study can jump toward ~US$120+ on transfer overages, which still sits in this kind of month.</p>
           </article>
 
-          <article class="phase">
-            <header>
-              <p class="eyebrow">Phase C</p>
+          <article class="phase" id="phase-c" data-fold-panel role="tabpanel" aria-labelledby="tab-phase-c">
               <h3>Growing, ~500–2,000 doors</h3>
             </header>
             <p>The bill starts to follow behaviour: how many texts, how many PDFs, how many seats.</p>
@@ -1780,6 +1827,7 @@
             </div>
             <p class="line-note">The top is open. SMS volume and document egress are why.</p>
           </article>
+          </div>
         </div>
 
         <figure class="chart">
@@ -2187,6 +2235,106 @@
         });
         paintCost();
       }
+
+      var foldQuery = window.matchMedia("(max-width: 719px)");
+
+      function foldNarrow() { return foldQuery.matches; }
+
+      function motionReduced() {
+        try {
+          return window.matchMedia("(prefers-reduced-motion: reduce)").matches || /\breduce=1\b/.test(window.location.search);
+        } catch (err) {
+          return true;
+        }
+      }
+
+      function openFold(id, fromTab) {
+        var panel = document.getElementById(id);
+        if (!panel || !panel.hasAttribute("data-fold-panel")) return false;
+        var root = panel.closest("[data-fold]");
+        if (!root) return false;
+        var tablist = root.querySelector("[data-fold-tabs]");
+        Array.prototype.forEach.call(root.querySelectorAll("[data-fold-panel]"), function (el) {
+          el.classList.toggle("is-on", el.id === id);
+        });
+        var selected = null;
+        Array.prototype.forEach.call(tablist.querySelectorAll("button"), function (btn) {
+          var on = btn.getAttribute("aria-controls") === id;
+          if (tablist.getAttribute("role") === "tablist") {
+            btn.setAttribute("aria-selected", on ? "true" : "false");
+            btn.tabIndex = on ? 0 : -1;
+          }
+          if (on) selected = btn;
+        });
+        if (fromTab && selected && foldNarrow()) {
+          selected.scrollIntoView({
+            inline: "nearest",
+            block: "nearest",
+            behavior: motionReduced() ? "auto" : "smooth"
+          });
+        }
+        document.dispatchEvent(new CustomEvent("studyshow"));
+        return true;
+      }
+
+      function applyFoldMode() {
+        var narrow = foldNarrow();
+        Array.prototype.forEach.call(document.querySelectorAll("[data-fold]"), function (root) {
+          var tablist = root.querySelector("[data-fold-tabs]");
+          if (narrow) {
+            tablist.setAttribute("role", "tablist");
+            Array.prototype.forEach.call(tablist.querySelectorAll("button"), function (btn) {
+              var panel = document.getElementById(btn.getAttribute("aria-controls"));
+              var on = !!(panel && panel.classList.contains("is-on"));
+              btn.setAttribute("role", "tab");
+              btn.setAttribute("aria-selected", on ? "true" : "false");
+              btn.tabIndex = on ? 0 : -1;
+            });
+            Array.prototype.forEach.call(root.querySelectorAll("[data-fold-panel]"), function (panel) {
+              panel.setAttribute("role", "tabpanel");
+              var btn = tablist.querySelector('[aria-controls="' + panel.id + '"]');
+              if (btn) panel.setAttribute("aria-labelledby", btn.id);
+            });
+          } else {
+            tablist.removeAttribute("role");
+            Array.prototype.forEach.call(tablist.querySelectorAll("button"), function (btn) {
+              btn.removeAttribute("role");
+              btn.removeAttribute("aria-selected");
+              btn.tabIndex = -1;
+            });
+            Array.prototype.forEach.call(root.querySelectorAll("[data-fold-panel]"), function (panel) {
+              panel.removeAttribute("role");
+              panel.removeAttribute("aria-labelledby");
+            });
+          }
+        });
+      }
+
+      Array.prototype.forEach.call(document.querySelectorAll("[data-fold-tabs]"), function (tablist) {
+        wireChoice(tablist, "aria-selected", function (tab) {
+          openFold(tab.getAttribute("aria-controls"), true);
+        });
+      });
+      applyFoldMode();
+      if (foldQuery.addEventListener) {
+        foldQuery.addEventListener("change", function () {
+          applyFoldMode();
+          document.dispatchEvent(new CustomEvent("studyshow"));
+        });
+      }
+
+      document.addEventListener("click", function (event) {
+        var link = event.target && event.target.closest ? event.target.closest("a[href^='#']") : null;
+        if (!link) return;
+        openFold(link.getAttribute("href").slice(1), false);
+      });
+
+      function openFoldHash() {
+        var id = (window.location.hash || "").replace(/^#/, "");
+        if (id) openFold(id, false);
+      }
+      openFoldHash();
+      window.addEventListener("hashchange", openFoldHash);
     })();
   </script>
   <script>
@@ -2322,6 +2470,9 @@
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", onScroll);
       window.addEventListener("hashchange", function () { window.setTimeout(revealVisible, 60); });
+      document.addEventListener("studyshow", function () {
+        requestAnimationFrame(function () { requestAnimationFrame(revealVisible); });
+      });
       window.addEventListener("load", revealVisible);
       window.setTimeout(revealVisible, 350);
 
