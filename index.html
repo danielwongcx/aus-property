@@ -10,7 +10,19 @@
   <meta name="description" content="First-cut study of a VIC-first residential property-management mini-SaaS: the VIC Property Hub browser demo read against PropertyME, three prioritized mini-SaaS bets, and USD list-price server costs. Researched 28 October 2026.">
   <meta property="og:title" content="AU residential PM mini-SaaS — first-cut study">
   <meta property="og:description" content="VIC Property Hub demo × PropertyME, three mini-SaaS bets, and a 28 October 2026 infrastructure cost cut. A study, not a product.">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    document.documentElement.classList.add("js");
+    (function () {
+      var reduce = true;
+      try {
+        reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (/\breduce=1\b/.test(window.location.search)) reduce = true;
+      } catch (err) {
+        reduce = true;
+      }
+      if (!reduce) document.documentElement.classList.add("motion");
+    })();
+  </script>
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://danielwongcx.github.io/aus-property/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -808,11 +820,112 @@
       .bet-jump a { flex: 1 1 auto; }
     }
 
+    /* One-shot study motion. html.motion is set only when motion is allowed.
+       Final state is the authored layout; .is-in plays it once. */
+    html.motion #thesis .wrap > ol.bets:first-of-type > li,
+    html.motion #saas-bets article.bet {
+      opacity: 0;
+      transform: translateY(0.4rem) scale(0.985);
+      transform-origin: center top;
+    }
+    html.motion #pain .cards > .card,
+    html.motion #costs .line[data-floor] {
+      opacity: 0;
+      transform: translateY(0.4rem);
+      transform-origin: center top;
+    }
+    html.motion #thesis .wrap > ol.bets:first-of-type > li.is-in,
+    html.motion #saas-bets article.bet.is-in,
+    html.motion #pain .cards > .card.is-in,
+    html.motion #costs .line[data-floor].is-in {
+      opacity: 1;
+      transform: none;
+      transition: opacity 420ms ease-out, transform 420ms ease-out;
+      transition-delay: calc(var(--stagger, 0) * 70ms);
+    }
+    html.motion #saas-bets article.bet.is-in {
+      transition: opacity 420ms ease-out, transform 420ms ease-out, border-color 400ms ease-out, background-color 400ms ease-out;
+      transition-delay: calc(var(--stagger, 0) * 70ms), calc(var(--stagger, 0) * 70ms), 0s, 0s;
+    }
+    html.motion #thesis .wrap > ol.bets:first-of-type > li.is-settled,
+    html.motion #saas-bets article.bet.is-settled,
+    html.motion #pain .cards > .card.is-settled,
+    html.motion #costs .line[data-floor].is-settled {
+      opacity: 1;
+      transform: none;
+    }
+    html.motion #saas-bets article.bet.is-settled {
+      transition: border-color 400ms ease-out, background-color 400ms ease-out;
+    }
+    html.motion .track .fill {
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+    html.motion .track .mark { opacity: 0; }
+    html.motion .track.is-in .fill {
+      transform: scaleX(1);
+      transition: transform 450ms ease-out;
+      transition-delay: calc(var(--stagger, 0) * 55ms);
+    }
+    html.motion .track.is-in .mark {
+      opacity: 1;
+      transition: opacity 220ms ease-out;
+      transition-delay: calc(var(--stagger, 0) * 55ms + 200ms);
+    }
+    html.motion .track.is-settled .fill {
+      transform: none;
+    }
+    html.motion .track.is-settled .mark { opacity: 1; }
+    html.motion #build .stack {
+      clip-path: inset(0 100% 0 0);
+    }
+    html.motion #build .stack.is-in {
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 450ms ease-out;
+      transition-delay: calc(var(--stagger, 0) * 80ms);
+    }
+    html.motion #build .stack.is-settled { clip-path: none; }
+    html.motion .pain-btn {
+      transition: border-color 400ms ease-out, box-shadow 400ms ease-out;
+    }
+    html.motion .bet-jump a {
+      transition: box-shadow 400ms ease-out, border-color 400ms ease-out;
+    }
+    html.motion .segs.is-feedback {
+      transform-origin: left center;
+      animation: study-rank 400ms ease-out 1;
+    }
+    html.motion .match-note.is-feedback,
+    html.motion .bet-jump a.is-feedback {
+      animation: study-hit 400ms ease-out 1;
+    }
+    @keyframes study-rank {
+      0% { transform: scaleX(0.94); }
+      65% { transform: scaleX(1.02); }
+      100% { transform: scaleX(1); }
+    }
+    @keyframes study-hit {
+      0% { transform: translateX(-0.15rem); }
+      65% { transform: translateX(0.1rem); }
+      100% { transform: none; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after {
         animation: none !important;
         transition: none !important;
+      }
+      html.motion #thesis .wrap > ol.bets:first-of-type > li,
+      html.motion #saas-bets article.bet,
+      html.motion #pain .cards > .card,
+      html.motion #costs .line[data-floor],
+      html.motion .track .fill,
+      html.motion .track .mark,
+      html.motion #build .stack {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
       }
     }
 
@@ -837,6 +950,19 @@
       .js .matrix-panels article + article,
       .tl-panels .tl-panel + .tl-panel { margin-top: 0.75rem; }
       .js-only { display: none !important; }
+      html.motion #thesis .wrap > ol.bets:first-of-type > li,
+      html.motion #saas-bets article.bet,
+      html.motion #pain .cards > .card,
+      html.motion #costs .line[data-floor],
+      html.motion .track .fill,
+      html.motion .track .mark,
+      html.motion #build .stack {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
@@ -1510,21 +1636,21 @@
               </div>
               <p class="money">$0</p>
             </div>
-            <div class="line">
+            <div class="line" data-floor="vercel">
               <div>
                 <p class="line-name">Vercel Pro</p>
                 <p class="line-note">US$20 platform fee, 1 deploying seat included.</p>
               </div>
               <p class="money">$20</p>
             </div>
-            <div class="line">
+            <div class="line" data-floor="supabase">
               <div>
                 <p class="line-name">Supabase Pro</p>
                 <p class="line-note">From US$25 / month.</p>
               </div>
               <p class="money">$25</p>
             </div>
-            <div class="line">
+            <div class="line" data-floor="paid">
               <div>
                 <p class="line-name">Paid floor</p>
                 <p class="line-note">US$20 + US$25. Stated sum for a real pilot.</p>
@@ -1896,7 +2022,12 @@
 
       var painChart = document.querySelector("[data-pain-chart]");
       if (painChart) {
+        var painNow = "all";
+        var painChecked = painChart.querySelector("[aria-checked='true']");
+        if (painChecked) painNow = painChecked.getAttribute("data-pain") || "all";
         function applyPain(id) {
+          var changed = id !== painNow;
+          painNow = id;
           var hits = painBets[id] || [];
           var filtering = id !== "all";
           Array.prototype.forEach.call(document.querySelectorAll(".bet"), function (card) {
@@ -1931,6 +2062,7 @@
           });
           var live = document.querySelector("[data-pain-live]");
           if (live && painCopy[id]) live.textContent = painCopy[id];
+          if (changed) document.dispatchEvent(new CustomEvent("studymark"));
         }
         wireChoice(painChart, "aria-checked", function (radio) {
           applyPain(radio.getAttribute("data-pain"));
@@ -2054,6 +2186,150 @@
           paintCost();
         });
         paintCost();
+      }
+    })();
+  </script>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      if (!root.classList.contains("motion")) return;
+      try {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || /\breduce=1\b/.test(window.location.search)) {
+          root.classList.remove("motion");
+          return;
+        }
+      } catch (err) {
+        root.classList.remove("motion");
+        return;
+      }
+
+      var watched = [];
+
+      function list(selector, scope) {
+        return Array.prototype.slice.call((scope || document).querySelectorAll(selector));
+      }
+
+      function byDom(a, b) {
+        if (a === b) return 0;
+        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+      }
+
+      function pulse(el) {
+        if (!el) return;
+        el.classList.remove("is-feedback");
+        void el.offsetWidth;
+        el.classList.add("is-feedback");
+        function done(event) {
+          if (event.target !== el) return;
+          el.classList.remove("is-feedback");
+          el.removeEventListener("animationend", done);
+        }
+        el.addEventListener("animationend", done);
+      }
+
+      document.addEventListener("studymark", function () {
+        if (!root.classList.contains("motion")) return;
+        pulse(document.querySelector("[data-pain-chart] [aria-checked='true'] .segs"));
+        list(".bet .match-note:not([hidden])").forEach(pulse);
+        list(".bet-jump a[data-hit]").forEach(pulse);
+      });
+
+      if (!("IntersectionObserver" in window)) {
+        root.classList.remove("motion");
+        return;
+      }
+
+      function already(el) {
+        return el.classList.contains("is-in") || el.classList.contains("is-settled");
+      }
+
+      function visibleEnough(el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.height < 1 && rect.width < 1) return false;
+        var viewH = window.innerHeight || root.clientHeight;
+        var visible = Math.min(rect.bottom, viewH) - Math.max(rect.top, 0);
+        var needed = Math.min(16, Math.max(8, rect.height * 0.2));
+        return visible >= needed;
+      }
+
+      function enter(els) {
+        var fresh = els.filter(function (el) { return !already(el); });
+        fresh.sort(byDom);
+        fresh.forEach(function (el, index) {
+          el.style.setProperty("--stagger", String(index));
+          el.classList.add("is-in");
+        });
+      }
+
+      function revealVisible() {
+        var batch = [];
+        watched.forEach(function (item) {
+          if (already(item.el) || !visibleEnough(item.el)) return;
+          item.observer.unobserve(item.el);
+          batch.push(item.el);
+        });
+        enter(batch);
+      }
+
+      function armGroup(nodes) {
+        if (!nodes.length) return;
+        var observer = new IntersectionObserver(function (entries) {
+          var batch = [];
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting || !visibleEnough(entry.target)) return;
+            observer.unobserve(entry.target);
+            batch.push(entry.target);
+          });
+          enter(batch);
+        }, { root: null, rootMargin: "0px", threshold: [0, 0.05, 0.15, 0.35] });
+        nodes.forEach(function (el) {
+          watched.push({ el: el, observer: observer });
+          observer.observe(el);
+        });
+      }
+
+      function boot() {
+        try {
+          [
+            "#thesis .wrap > ol.bets:first-of-type > li",
+            "#saas-bets article.bet",
+            "#pain .cards > .card",
+            "#costs .line[data-floor]",
+            "#build .stack"
+          ].forEach(function (selector) { armGroup(list(selector)); });
+          list("[data-timeline], #saas-bets figure.chart, #costs figure.chart").forEach(function (chart) {
+            armGroup(list(".track", chart));
+          });
+          revealVisible();
+        } catch (err) {
+          root.classList.remove("motion");
+        }
+      }
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(boot);
+      });
+
+      var scheduled = false;
+      function onScroll() {
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(function () {
+          scheduled = false;
+          revealVisible();
+        });
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      window.addEventListener("hashchange", function () { window.setTimeout(revealVisible, 60); });
+      window.addEventListener("load", revealVisible);
+      window.setTimeout(revealVisible, 350);
+
+      var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (motionQuery.addEventListener) {
+        motionQuery.addEventListener("change", function () {
+          if (motionQuery.matches) root.classList.remove("motion");
+        });
       }
     })();
   </script>
